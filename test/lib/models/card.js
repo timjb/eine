@@ -12,26 +12,26 @@
     });
     it("allows me to lay special (=wild) cards on every other card", function() {
       var wishCard;
-      wishCard = new Card('black', 'wish');
-      wishCard.color = 'red';
+      wishCard = new Card('black', 'wish').wish('red');
       return expect(wishCard.matches(new Card('green', '9'))).toBe(true);
     });
     it("validates cards", function() {
       var v;
       v = function() {
-        var args;
+        var args, card;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        return (function(func, args, ctor) {
+        card = (function(func, args, ctor) {
           ctor.prototype = func.prototype;
           var child = new ctor, result = func.apply(child, args);
           return typeof result === "object" ? result : child;
-        })(Card, args, function() {}).validate();
+        })(Card, args, function() {});
+        return !card.validate(card.attributes);
       };
-      expect(v('green', '5')).toBeTruthy();
-      expect(v('yellow', '5')).toBeTruthy();
-      expect(v('blue', '5')).toBeTruthy();
-      expect(v('red', '5')).toBeTruthy();
-      expect(v('purple', '5')).toBeFalsy();
+      expect(v('green', '5')).toBe(true);
+      expect(v('yellow', '5')).toBe(true);
+      expect(v('blue', '5')).toBe(true);
+      expect(v('red', '5')).toBe(true);
+      expect(v('purple', '5')).toBe(false);
       expect(v('red', '0')).toBe(true);
       expect(v('red', '1')).toBe(true);
       expect(v('red', '2')).toBe(true);
@@ -67,7 +67,7 @@
       for (i = 1; i <= 100; i++) {
         card1 = Card.random();
         card2 = Card.random();
-        isEqual = card1.color === card2.color && card1.symbol === card2.symbol;
+        isEqual = card1.get('color') === card2.get('color') && card1.get('symbol') === card2.get('symbol');
         if (!isEqual) {
           notEqual += 1;
         }

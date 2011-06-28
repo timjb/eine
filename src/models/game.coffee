@@ -25,17 +25,18 @@ class App.Models.Game extends Backbone.Model
 
   putDown: (card) ->
     unless card.matches @_open
+      console.log("doesn't match", card, @_open)
       throw new Error("invalid move")
     @_open = card
     
-    isSkip    = card.symbol is 'skip'
-    isReverse = card.symbol is 'reverse'
+    isSkip    = card.get('symbol') is 'skip'
+    isReverse = card.get('symbol') is 'reverse'
     @_clockwise = not @_clockwise if isReverse
     
     currentOffset = (if @_clockwise then 1 else -1) * (if isSkip then 2 else 1)
     @_current = (@_current + currentOffset + @_players.length) % @_players.length
     
     for n in [2,4]
-      @_give @currentPlayer(), n if card.symbol is "+#{n}"
+      @_give @currentPlayer(), n if card.get('symbol') is "+#{n}"
     
     @trigger 'next', @currentPlayer()

@@ -8,19 +8,20 @@ describe "Card (model)", ->
     expect(new Card('red', '7').matches(greenNine)).toBe no
 
   it "allows me to lay special (=wild) cards on every other card", ->
-    wishCard = new Card 'black', 'wish'
-    wishCard.color = 'red'
+    wishCard = new Card('black', 'wish').wish('red')
     expect(wishCard.matches(new Card 'green', '9')).toBe yes
 
   it "validates cards", ->
-    v = (args...) -> new Card(args...).validate()
+    v = (args...) ->
+      card = new Card(args...)
+      not card.validate card.attributes
     
     # colors
-    expect(v 'green', '5').toBeTruthy()
-    expect(v 'yellow', '5').toBeTruthy()
-    expect(v 'blue', '5').toBeTruthy()
-    expect(v 'red', '5').toBeTruthy()
-    expect(v 'purple', '5').toBeFalsy()
+    expect(v 'green', '5').toBe yes
+    expect(v 'yellow', '5').toBe yes
+    expect(v 'blue', '5').toBe yes
+    expect(v 'red', '5').toBe yes
+    expect(v 'purple', '5').toBe no
     
     # numbers
     expect(v 'red', '0').toBe yes
@@ -57,6 +58,7 @@ describe "Card (model)", ->
     for i in [1..100]
       card1 = Card.random()
       card2 = Card.random()
-      isEqual = card1.color is card2.color and card1.symbol is card2.symbol
+      isEqual = card1.get('color')  is card2.get('color') and
+                card1.get('symbol') is card2.get('symbol')
       notEqual += 1 unless isEqual
-    expect(notEqual).toBeGreaterThan(50)
+    expect(notEqual).toBeGreaterThan 50

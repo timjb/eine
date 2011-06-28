@@ -1,9 +1,15 @@
-class App.Models.Card
-  constructor: (@color, @symbol) ->
-    @special = @color is @constructor.specialColor
+class App.Models.Card extends Backbone.Model
+  constructor: (color, symbol) ->
+    # for compatibility reasons
+    Backbone.Model.call @,
+      color:   color
+      symbol:  symbol
+      special: color is @constructor.specialColor
 
   matches: (other) ->
-    @special or @symbol is other.symbol or @color is other.color
+    @get('special') or
+    @get('symbol') is other.get('symbol') or
+    @get('color') is other.get('color')
 
   @colors         = 'red green blue yellow'.split ' '
   @specialColor   = 'black'
@@ -11,23 +17,30 @@ class App.Models.Card
   @specialSymbols = ['wish', '+4']
   @symbols        = @normalSymbols.slice().concat(@specialSymbols)
 
-  validate: ->
-    return no if @constructor.symbols.indexOf(@symbol) is -1
-    return no if @constructor.colors.indexOf(@color) is -1 and @color isnt @constructor.specialColor
-    return yes
+  validate: (attrs) ->
+    attrs = _.extend {}, attrs, @attributes
+    return "invalid symbol" if @constructor.symbols.indexOf(attrs.symbol) is -1
+    return "invalid color" if @constructor.colors.indexOf(attrs.color) is -1 and
+                              attrs.color isnt @constructor.specialColor
+
+  wish: (color) ->
+    unless @get 'special'
+      throw new Error("Can't wish a color, because this is no special card")
+    @set color:color
+    this
 
   @deck: ->
-    deck = []
-    
-    for color in @colors
-      for symbol in @normalSymbols
-        for i in [0,1]
-          deck.push(new @ color, symbol)
-    
-    deck.push(new @ 'black', 'wish') for i in [1..4]
-    deck.push(new @ 'black', '+4')   for i in [1..2]
-    
-    deck
+    unless @_cachedDeck
+      @_cachedDeck = deck = []
+      
+      for color in @colors
+        for symbol in @normalSymbols
+          for i in [0,1]
+            deck.push(new @ color, symbol)
+      
+      deck.push(new @ 'black', 'wish') for i in [1..4]
+      deck.push(new @ 'black', '+4')   for i in [1..2]
+    @_cachedDeck
 
   @random: ->
     deck = @deck()

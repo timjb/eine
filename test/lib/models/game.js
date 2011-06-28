@@ -33,7 +33,7 @@
         return expect(game.currentPlayer()).toBe(p);
       };
       expectPlayer(tim);
-      game.putDown(new Card('red', 'wish'));
+      game.putDown(new Card('black', 'wish').wish('red'));
       expectPlayer(christian);
       game.putDown(new Card('red', 'reverse'));
       expectPlayer(tim);
@@ -46,8 +46,7 @@
       var me, plus2, plus4, you;
       me = game.createPlayer();
       you = game.createPlayer();
-      plus4 = new Card('black', '+4');
-      plus4.color = 'green';
+      plus4 = new Card('black', '+4').wish('green');
       plus2 = new Card('green', '+2');
       game.start();
       game.putDown(plus4);
@@ -61,10 +60,7 @@
       return expect(game._open).toBeInstanceof(Card);
     });
     return it("should throw an exception if the move isn't allowed", function() {
-      var wishGreen;
-      wishGreen = new Card('black', 'wish');
-      wishGreen.color = 'green';
-      game.putDown(wishGreen);
+      game.putDown(new Card('black', 'wish').wish('green'));
       expect(function() {
         return game.putDown(new Card('red', '7'));
       }).toThrow();

@@ -28,7 +28,7 @@ describe "Game (model)", ->
       expect(nextPlayer).toBe p
       expect(game.currentPlayer()).toBe p
     expectPlayer tim
-    game.putDown(new Card 'red', 'wish')
+    game.putDown(new Card('black', 'wish').wish('red'))
     expectPlayer christian
     game.putDown(new Card 'red', 'reverse')
     expectPlayer tim
@@ -41,8 +41,7 @@ describe "Game (model)", ->
     me  = game.createPlayer()
     you = game.createPlayer()
     
-    plus4 = new Card 'black', '+4'
-    plus4.color = 'green'
+    plus4 = new Card('black', '+4').wish('green')
     plus2 = new Card 'green', '+2'
     
     game.start()
@@ -57,9 +56,7 @@ describe "Game (model)", ->
     expect(game._open).toBeInstanceof(Card)
 
   it "should throw an exception if the move isn't allowed", ->
-    wishGreen = new Card('black', 'wish')
-    wishGreen.color = 'green'
-    game.putDown wishGreen
+    game.putDown(new Card('black', 'wish').wish('green'))
     expect(-> game.putDown(new Card 'red',   '7')).toThrow()
     expect(-> game.putDown(new Card 'green', '3')).not.toThrow()
 
