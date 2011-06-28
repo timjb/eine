@@ -1,5 +1,4 @@
-Game = App.Models.Game
-Card = App.Models.Card
+{Game, Card} = App.Models
 
 describe "Game (model)", ->
   game = null
@@ -8,9 +7,9 @@ describe "Game (model)", ->
   it "should create players", ->
     expect(game._players).toEqual []
     tim = game.createPlayer()
-    expect(tim._cards.length).toEqual App.Settings.startCount
+    expect(tim.countCards()).toEqual App.Settings.startCount
     tom = game.createPlayer()
-    expect(tom._cards.length).toEqual App.Settings.startCount
+    expect(tom.countCards()).toEqual App.Settings.startCount
     expect(game._players.length).toBe 2
 
   it "should tell me who's turn it is", ->
@@ -37,5 +36,19 @@ describe "Game (model)", ->
     expectPlayer julia
     game.putDown(new Card 'red', 'skip')
     expectPlayer tim
+
+  it "should give the next player some cards when I lay +2 or +4", ->
+    me  = game.createPlayer()
+    you = game.createPlayer()
+    
+    plus4 = new Card 'black', '+4'
+    plus4.color = 'green'
+    plus2 = new Card 'green', '+2'
+    
+    game.start()
+    game.putDown plus4
+    expect(you.countCards()).toBe App.Settings.startCount + 4
+    game.putDown plus2
+    expect(me.countCards()).toBe App.Settings.startCount + 2
 
   # TODO: test if a move is invalid

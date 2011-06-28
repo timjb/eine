@@ -1,7 +1,6 @@
 (function() {
-  var Card, Game;
-  Game = App.Models.Game;
-  Card = App.Models.Card;
+  var Card, Game, _ref;
+  _ref = App.Models, Game = _ref.Game, Card = _ref.Card;
   describe("Game (model)", function() {
     var game;
     game = null;
@@ -12,12 +11,12 @@
       var tim, tom;
       expect(game._players).toEqual([]);
       tim = game.createPlayer();
-      expect(tim._cards.length).toEqual(App.Settings.startCount);
+      expect(tim.countCards()).toEqual(App.Settings.startCount);
       tom = game.createPlayer();
-      expect(tom._cards.length).toEqual(App.Settings.startCount);
+      expect(tom.countCards()).toEqual(App.Settings.startCount);
       return expect(game._players.length).toBe(2);
     });
-    return it("should tell me who's turn it is", function() {
+    it("should tell me who's turn it is", function() {
       var christian, expectPlayer, julia, nextPlayer, tim;
       tim = game.createPlayer();
       christian = game.createPlayer();
@@ -42,6 +41,19 @@
       expectPlayer(julia);
       game.putDown(new Card('red', 'skip'));
       return expectPlayer(tim);
+    });
+    return it("should give the next player some cards when I lay +2 or +4", function() {
+      var me, plus2, plus4, you;
+      me = game.createPlayer();
+      you = game.createPlayer();
+      plus4 = new Card('black', '+4');
+      plus4.color = 'green';
+      plus2 = new Card('green', '+2');
+      game.start();
+      game.putDown(plus4);
+      expect(you.countCards()).toBe(App.Settings.startCount + 4);
+      game.putDown(plus2);
+      return expect(me.countCards()).toBe(App.Settings.startCount + 2);
     });
   });
 }).call(this);

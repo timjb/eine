@@ -4,6 +4,6 @@ describe "Player (model)", ->
   it "should receive cards", ->
     game = new Game
     player = game.createPlayer()
-    expect(player._cards.length).toBe App.Settings.startCount
+    expect(player.countCards()).toBe App.Settings.startCount
     player.receive(new Card 'black', 'wish')
-    expect(player._cards.length).toBe App.Settings.startCount + 1
+    expect(player.countCards()).toBe App.Settings.startCount + 1

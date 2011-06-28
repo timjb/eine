@@ -6,9 +6,9 @@
       var game, player;
       game = new Game;
       player = game.createPlayer();
-      expect(player._cards.length).toBe(App.Settings.startCount);
+      expect(player.countCards()).toBe(App.Settings.startCount);
       player.receive(new Card('black', 'wish'));
-      return expect(player._cards.length).toBe(App.Settings.startCount + 1);
+      return expect(player.countCards()).toBe(App.Settings.startCount + 1);
     });
   });
 }).call(this);
