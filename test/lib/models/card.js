@@ -13,7 +13,7 @@
     it("allows me to lay special (=wild) cards on every other card", function() {
       return expect(new Card('red', 'wish', true).matches(new Card('green', '9'))).toBeTruthy();
     });
-    return it("validates cards", function() {
+    it("validates cards", function() {
       var v;
       v = function() {
         var args;
@@ -48,6 +48,17 @@
       expect(v('red', 'wish', true)).toBeTruthy();
       expect(v('red', 'wish')).toBeFalsy();
       return expect(v('red', '+42')).toBeFalsy();
+    });
+    return it("creates a typical card deck", function() {
+      var card, deck, _i, _len, _results;
+      deck = Card.deck();
+      expect(deck.length).toBe(110);
+      _results = [];
+      for (_i = 0, _len = deck.length; _i < _len; _i++) {
+        card = deck[_i];
+        _results.push(expect(card).toBeInstanceof(Card));
+      }
+      return _results;
     });
   });
 }).call(this);

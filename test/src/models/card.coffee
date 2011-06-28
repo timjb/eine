@@ -44,3 +44,10 @@ describe "Card (model)", ->
     
     # nonsense
     expect(v 'red', '+42').toBeFalsy()
+
+  it "creates a typical card deck", ->
+    deck = Card.deck()
+    expect(deck.length).toBe 110
+    for card in deck
+      expect(card).toBeInstanceof(Card)
+      #expect(card.validate()).toBe true

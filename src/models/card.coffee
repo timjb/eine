@@ -16,3 +16,16 @@ class App.Models.Card
     return false if @constructor.colors.indexOf(@color) is -1
     return false if not @special and @constructor.specialSymbols.indexOf(@symbol) isnt -1
     return true
+
+  @deck: ->
+    deck = []
+    
+    for color in @colors
+      for symbol in @symbols
+        for i in [0,1]
+          deck.push(new @ color, symbol)
+    
+    deck.push(new @ '', 'wish', yes) for i in [1..4]
+    deck.push(new @ '', '+4',   yes) for i in [1..2]
+    
+    deck
