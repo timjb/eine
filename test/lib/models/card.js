@@ -6,12 +6,15 @@
     it("allows me to lay 'normal' cards on top of others if the symbol or the number matches", function() {
       var greenNine;
       greenNine = new Card('green', '9');
-      expect(new Card('green', '7').matches(greenNine)).toBeTruthy();
-      expect(new Card('red', '9').matches(greenNine)).toBeTruthy();
-      return expect(new Card('red', '7').matches(greenNine)).toBeFalsy();
+      expect(new Card('green', '7').matches(greenNine)).toBe(true);
+      expect(new Card('red', '9').matches(greenNine)).toBe(true);
+      return expect(new Card('red', '7').matches(greenNine)).toBe(false);
     });
     it("allows me to lay special (=wild) cards on every other card", function() {
-      return expect(new Card('red', 'wish', true).matches(new Card('green', '9'))).toBeTruthy();
+      var wishCard;
+      wishCard = new Card('black', 'wish');
+      wishCard.color = 'red';
+      return expect(wishCard.matches(new Card('green', '9'))).toBe(true);
     });
     it("validates cards", function() {
       var v;
@@ -29,25 +32,23 @@
       expect(v('blue', '5')).toBeTruthy();
       expect(v('red', '5')).toBeTruthy();
       expect(v('purple', '5')).toBeFalsy();
-      expect(v('red', '0')).toBeTruthy();
-      expect(v('red', '1')).toBeTruthy();
-      expect(v('red', '2')).toBeTruthy();
-      expect(v('red', '3')).toBeTruthy();
-      expect(v('red', '4')).toBeTruthy();
-      expect(v('red', '5')).toBeTruthy();
-      expect(v('red', '6')).toBeTruthy();
-      expect(v('red', '7')).toBeTruthy();
-      expect(v('red', '8')).toBeTruthy();
-      expect(v('red', '9')).toBeTruthy();
-      expect(v('red', '+2')).toBeTruthy();
-      expect(v('red', 'skip')).toBeTruthy();
-      expect(v('red', 'reverse')).toBeTruthy();
-      expect(v('red', '+4', true)).toBeTruthy();
-      expect(v('red', '+2', true)).toBeFalsy();
-      expect(v('red', '+4')).toBeFalsy();
-      expect(v('red', 'wish', true)).toBeTruthy();
-      expect(v('red', 'wish')).toBeFalsy();
-      return expect(v('red', '+42')).toBeFalsy();
+      expect(v('red', '0')).toBe(true);
+      expect(v('red', '1')).toBe(true);
+      expect(v('red', '2')).toBe(true);
+      expect(v('red', '3')).toBe(true);
+      expect(v('red', '4')).toBe(true);
+      expect(v('red', '5')).toBe(true);
+      expect(v('red', '6')).toBe(true);
+      expect(v('red', '7')).toBe(true);
+      expect(v('red', '8')).toBe(true);
+      expect(v('red', '9')).toBe(true);
+      expect(v('red', '+2')).toBe(true);
+      expect(v('red', 'skip')).toBe(true);
+      expect(v('red', 'reverse')).toBe(true);
+      expect(v('black', '+4')).toBe(true);
+      expect(v('black', 'wish')).toBe(true);
+      expect(v('red', '+42')).toBe(false);
+      return expect(v('lila', '+4')).toBe(false);
     });
     it("creates a typical card deck", function() {
       var card, deck, _i, _len, _results;
