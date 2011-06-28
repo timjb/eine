@@ -29,3 +29,7 @@ class App.Models.Card
     deck.push(new @ '', '+4',   yes) for i in [1..2]
     
     deck
+
+  @random: ->
+    deck = @deck()
+    deck[Math.floor(Math.random() * deck.length)]

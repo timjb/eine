@@ -49,7 +49,7 @@
       expect(v('red', 'wish')).toBeFalsy();
       return expect(v('red', '+42')).toBeFalsy();
     });
-    return it("creates a typical card deck", function() {
+    it("creates a typical card deck", function() {
       var card, deck, _i, _len, _results;
       deck = Card.deck();
       expect(deck.length).toBe(110);
@@ -59,6 +59,19 @@
         _results.push(expect(card).toBeInstanceof(Card));
       }
       return _results;
+    });
+    return it("gives me a random card", function() {
+      var card1, card2, i, isEqual, notEqual;
+      notEqual = 0;
+      for (i = 1; i <= 100; i++) {
+        card1 = Card.random();
+        card2 = Card.random();
+        isEqual = card1.color === card2.color && card1.symbol === card2.symbol;
+        if (!isEqual) {
+          notEqual += 1;
+        }
+      }
+      return expect(notEqual).toBeGreaterThan(50);
     });
   });
 }).call(this);

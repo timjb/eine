@@ -32,8 +32,9 @@
 <body>
   <h1>Specs</h1>
   <script defer="defer">
-    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-    jasmine.getEnv().execute();
+    var env = jasmine.getEnv()
+    env.addReporter(new jasmine.TrivialReporter())
+    env.execute()
   </script>
 </body>
 

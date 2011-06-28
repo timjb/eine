@@ -51,3 +51,12 @@ describe "Card (model)", ->
     for card in deck
       expect(card).toBeInstanceof(Card)
       #expect(card.validate()).toBe true
+
+  it "gives me a random card", ->
+    notEqual = 0
+    for i in [1..100]
+      card1 = Card.random()
+      card2 = Card.random()
+      isEqual = card1.color is card2.color and card1.symbol is card2.symbol
+      notEqual += 1 unless isEqual
+    expect(notEqual).toBeGreaterThan(50)
