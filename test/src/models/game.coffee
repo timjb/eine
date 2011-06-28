@@ -51,4 +51,16 @@ describe "Game (model)", ->
     game.putDown plus2
     expect(me.countCards()).toBe App.Settings.startCount + 2
 
+  it "should uncover a random card at game start", ->
+    expect(game._open).not.toBeInstanceof(Card)
+    game.start()
+    expect(game._open).toBeInstanceof(Card)
+
+  it "should throw an exception if the move isn't allowed", ->
+    wishGreen = new Card('black', 'wish')
+    wishGreen.color = 'green'
+    game.putDown wishGreen
+    expect(-> game.putDown(new Card 'red',   '7')).toThrow()
+    expect(-> game.putDown(new Card 'green', '3')).not.toThrow()
+
   # TODO: test if a move is invalid

@@ -42,7 +42,7 @@
       game.putDown(new Card('red', 'skip'));
       return expectPlayer(tim);
     });
-    return it("should give the next player some cards when I lay +2 or +4", function() {
+    it("should give the next player some cards when I lay +2 or +4", function() {
       var me, plus2, plus4, you;
       me = game.createPlayer();
       you = game.createPlayer();
@@ -54,6 +54,23 @@
       expect(you.countCards()).toBe(App.Settings.startCount + 4);
       game.putDown(plus2);
       return expect(me.countCards()).toBe(App.Settings.startCount + 2);
+    });
+    it("should uncover a random card at game start", function() {
+      expect(game._open).not.toBeInstanceof(Card);
+      game.start();
+      return expect(game._open).toBeInstanceof(Card);
+    });
+    return it("should throw an exception if the move isn't allowed", function() {
+      var wishGreen;
+      wishGreen = new Card('black', 'wish');
+      wishGreen.color = 'green';
+      game.putDown(wishGreen);
+      expect(function() {
+        return game.putDown(new Card('red', '7'));
+      }).toThrow();
+      return expect(function() {
+        return game.putDown(new Card('green', '3'));
+      }).not.toThrow();
     });
   });
 }).call(this);
