@@ -8,23 +8,34 @@ describe "Game (model)", ->
   it "should create players", ->
     expect(game._players).toEqual []
     tim = game.createPlayer()
-    #expect(tim._cards.length).toEqual 7
+    expect(tim._cards.length).toEqual App.Settings.startCount
     tom = game.createPlayer()
-    #expect(tom._cards.length).toEqual 7
+    expect(tom._cards.length).toEqual App.Settings.startCount
     expect(game._players.length).toBe 2
 
   it "should tell me who's turn it is", ->
     tim       = game.createPlayer()
     christian = game.createPlayer()
     julia     = game.createPlayer()
-    expect(game.currentPlayer()).toBe tim
-    game.putDown(new Card 'red', 'wish', true)
-    expect(game.currentPlayer()).toBe christian
+    
+    nextPlayer = null
+    game.bind 'next', (p) -> nextPlayer = p
+    
+    expect(nextPlayer).toBeNull()
+    expect(game.currentPlayer()).toBeNull()
+    
+    game.start()
+    expectPlayer = (p) ->
+      expect(nextPlayer).toBe p
+      expect(game.currentPlayer()).toBe p
+    expectPlayer tim
+    game.putDown(new Card 'red', 'wish')
+    expectPlayer christian
     game.putDown(new Card 'red', 'reverse')
-    expect(game.currentPlayer()).toBe tim
+    expectPlayer tim
     game.putDown(new Card 'red', '0')
-    expect(game.currentPlayer()).toBe julia
+    expectPlayer julia
     game.putDown(new Card 'red', 'skip')
-    expect(game.currentPlayer().toBe tim
+    expectPlayer tim
 
   # TODO: test if a move is invalid
