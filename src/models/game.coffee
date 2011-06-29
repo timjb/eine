@@ -25,7 +25,6 @@ class App.Models.Game extends Backbone.Model
 
   putDown: (card) ->
     unless card.matches @_open
-      console.log("doesn't match", card, @_open)
       throw new Error("invalid move")
     @_open = card
     

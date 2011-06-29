@@ -1,6 +1,7 @@
 window.App =
   Controllers: {}
   Models: {}
+  Collections: {}
   Views: {}
   Settings:
     startCount: 7
