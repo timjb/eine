@@ -31,12 +31,12 @@ describe "Player (model)", ->
       tim.playCard null
       expect(tim.countCards()).toBe(startCount + 1)
       expect(game.currentPlayer()).toBe nina
-      #for card in Card.deck()
-      #  if not hasCard(nina, card) or not card.matches game._open
-      #    expect(-> nina.playCard card).toThrow()
-      #for card in nina.hand.models
-      #  if card.matches game._open
-      #    nina.playCard card
-      #    expect(nina.countCards()).toBe(startCount - 1)
-      #    expect(game.currentPlayer()).toBe tim
-      #    break
+      for card in Card.deck()
+        if not hasCard(nina, card) or not card.matches(game.get 'open')
+          expect(-> nina.playCard card).toThrow()
+      for card in nina.hand.models
+        if card.matches(game.get 'open')
+          nina.playCard card
+          expect(nina.countCards()).toBe(startCount - 1)
+          expect(game.currentPlayer()).toBe tim
+          break

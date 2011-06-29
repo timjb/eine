@@ -3,14 +3,12 @@ Card   = App.Models.Card
 
 class App.Models.Game extends Backbone.Model
   initialize: ->
-    @_players = []
-    @_clockwise = yes
-    @_open = null
-    @bind 'next', => @_didDraw = false
+    @players = []
+    @bind 'next', => @_didDraw = no
 
   createPlayer: ->
     player = new Player @
-    @_players.push player
+    @players.push player
     @_give player, App.Settings.startCount
     player
   
@@ -18,28 +16,30 @@ class App.Models.Game extends Backbone.Model
     player.receive Card.random() for i in [1..n]
 
   start: ->
-    @_current = 0
-    @_open = Card.random()
+    @set current:0
+    @set clockwise:yes
+    @set open:Card.random()
+    
     @trigger 'next', @currentPlayer()
 
-  currentPlayer: -> @_players[@_current] or null
+  currentPlayer: -> @players[@get 'current'] or null
 
   putDown: (card) ->
     unless card or @_didDraw
       @_give @currentPlayer(), 1
-      @_didDraw = true
+      @_didDraw = yes
       return
     
     if card
-      throw new Error "invalid move" unless card.matches @_open
-      @_open = card
+      throw new Error "invalid move" unless card.matches(@get 'open')
+      @set open:card
       
       isSkip    = card.get('symbol') is 'skip'
       isReverse = card.get('symbol') is 'reverse'
-      @_clockwise = not @_clockwise if isReverse
+      @set(clockwise: not @get 'clockwise') if isReverse
     
-    currentOffset = (if @_clockwise then 1 else -1) * (if isSkip then 2 else 1)
-    @_current = (@_current + currentOffset + @_players.length) % @_players.length
+    currentOffset = (if @get 'clockwise' then 1 else -1) * (if isSkip then 2 else 1)
+    @set current:((@get('current') + currentOffset + @players.length) % @players.length)
     
     if card
       for n in [2,4]

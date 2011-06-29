@@ -11,6 +11,8 @@ class App.Models.Player extends Backbone.Model
   playCard: (card) ->
     if card
       card = @hand.getByCid(card) or @hand.get(card)
-      throw "Player doesn't have this card" unless card
-    @game.putDown card
-    @hand.remove card if card
+      throw new Error "Player doesn't have this card" unless card
+      @game.putDown card
+      @hand.remove card
+    else
+      @game.putDown null

@@ -5,12 +5,12 @@ describe "Game (model)", ->
   beforeEach -> game = new Game
 
   it "should create players", ->
-    expect(game._players).toEqual []
+    expect(game.players).toEqual []
     tim = game.createPlayer()
-    expect(tim.countCards()).toEqual App.Settings.startCount
+    expect(tim.countCards()).toBe App.Settings.startCount
     tom = game.createPlayer()
-    expect(tom.countCards()).toEqual App.Settings.startCount
-    expect(game._players.length).toBe 2
+    expect(tom.countCards()).toBe App.Settings.startCount
+    expect(game.players.length).toBe 2
 
   it "should tell me who's turn it is", ->
     tim       = game.createPlayer()
@@ -51,9 +51,9 @@ describe "Game (model)", ->
     expect(me.countCards()).toBe App.Settings.startCount + 2
 
   it "should uncover a random card at game start", ->
-    expect(game._open).not.toBeInstanceof(Card)
+    expect(game.get 'open').not.toBeInstanceof(Card)
     game.start()
-    expect(game._open).toBeInstanceof(Card)
+    expect(game.get 'open').toBeInstanceof(Card)
 
   it "should throw an exception if the move isn't allowed", ->
     game.putDown(new Card('black', 'wish').wish('green'))
