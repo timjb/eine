@@ -60,6 +60,9 @@
       return expect(game.get('open')).toBeInstanceof(Card);
     });
     return it("should throw an exception if the move isn't allowed", function() {
+      var p;
+      p = game.createPlayer();
+      game.start();
       game.putDown(new Card('black', 'wish').wish('green'));
       expect(function() {
         return game.putDown(new Card('red', '7'));

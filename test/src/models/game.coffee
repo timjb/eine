@@ -56,8 +56,8 @@ describe "Game (model)", ->
     expect(game.get 'open').toBeInstanceof(Card)
 
   it "should throw an exception if the move isn't allowed", ->
+    p = game.createPlayer()
+    game.start()
     game.putDown(new Card('black', 'wish').wish('green'))
     expect(-> game.putDown(new Card 'red',   '7')).toThrow()
     expect(-> game.putDown(new Card 'green', '3')).not.toThrow()
-
-  # TODO: test if a move is invalid

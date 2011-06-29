@@ -44,4 +44,4 @@ class App.Models.Card extends Backbone.Model
 
   @random: ->
     randomCard = @deck()[Math.floor(Math.random() * @deck().length)]
-    new @ randomCard # Use constructor => new cid
+    new @ randomCard.get('color'), randomCard.get('symbol') # Use constructor => new cid

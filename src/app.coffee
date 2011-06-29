@@ -5,6 +5,7 @@ window.App =
   Views: {}
   Settings:
     startCount: 7
+    einePenalty: 2
 
 $('window').ready ->
   new App.Controllers.Application

@@ -36,7 +36,43 @@ describe "Player (model)", ->
           expect(-> nina.playCard card).toThrow()
       for card in nina.hand.models
         if card.matches(game.get 'open')
+          card.wish 'green' if card.get 'special'
           nina.playCard card
           expect(nina.countCards()).toBe(startCount - 1)
           expect(game.currentPlayer()).toBe tim
           break
+
+  it "should know how to play uno", ->
+    game    = new Game
+    player1 = game.createPlayer()
+    player2 = game.createPlayer()
+    
+    winner = null
+    game.bind 'winner', (w) -> winner = w
+    
+    game.start()
+    i = 0
+    while i < 1000 and not winner
+      game.currentPlayer().playAI()
+      i += 1
+    
+    expect(winner.countCards()).toBe 0
+    expect(winner is player1 or winner is player2).toBe yes
+
+  it "should take forever for two computer players if they didn't know that they have to say 'eine'", ->
+    game    = new Game
+    player1 = game.createPlayer()
+    player2 = game.createPlayer()
+    
+    player1.eine = player2.eine = ->
+    
+    winner = null
+    game.bind 'winner', (w) -> winner = w
+    
+    game.start()
+    i = 0
+    while i < 1000 and not winner
+      game.currentPlayer().playAI()
+      i += 1
+    
+    expect(winner is player1 or winner is player2).toBe no
