@@ -43,5 +43,5 @@ class App.Models.Card extends Backbone.Model
     @_cachedDeck
 
   @random: ->
-    deck = @deck()
-    deck[Math.floor(Math.random() * deck.length)]
+    randomCard = @deck()[Math.floor(Math.random() * @deck().length)]
+    new @ randomCard # Use constructor => new cid

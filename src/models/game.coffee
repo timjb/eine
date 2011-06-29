@@ -6,9 +6,10 @@ class App.Models.Game extends Backbone.Model
     @_players = []
     @_clockwise = yes
     @_open = null
+    @bind 'next', => @_didDraw = false
 
   createPlayer: ->
-    player = new Player
+    player = new Player @
     @_players.push player
     @_give player, App.Settings.startCount
     player
@@ -24,18 +25,24 @@ class App.Models.Game extends Backbone.Model
   currentPlayer: -> @_players[@_current] or null
 
   putDown: (card) ->
-    unless card.matches @_open
-      throw new Error("invalid move")
-    @_open = card
+    unless card or @_didDraw
+      @_give @currentPlayer(), 1
+      @_didDraw = true
+      return
     
-    isSkip    = card.get('symbol') is 'skip'
-    isReverse = card.get('symbol') is 'reverse'
-    @_clockwise = not @_clockwise if isReverse
+    if card
+      throw new Error "invalid move" unless card.matches @_open
+      @_open = card
+      
+      isSkip    = card.get('symbol') is 'skip'
+      isReverse = card.get('symbol') is 'reverse'
+      @_clockwise = not @_clockwise if isReverse
     
     currentOffset = (if @_clockwise then 1 else -1) * (if isSkip then 2 else 1)
     @_current = (@_current + currentOffset + @_players.length) % @_players.length
     
-    for n in [2,4]
-      @_give @currentPlayer(), n if card.get('symbol') is "+#{n}"
+    if card
+      for n in [2,4]
+        @_give @currentPlayer(), n if card.get('symbol') is "+#{n}"
     
     @trigger 'next', @currentPlayer()

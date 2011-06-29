@@ -1,7 +1,16 @@
+{Hand} = App.Collections
+
 class App.Models.Player extends Backbone.Model
   initialize: (@game) ->
-    @_cards = []
+    @hand = new Hand
 
-  receive: (card) -> @_cards.push card
+  receive: (card) -> @hand.add card
 
-  countCards: -> @_cards.length
+  countCards: -> @hand.length
+
+  playCard: (card) ->
+    if card
+      card = @hand.getByCid(card) or @hand.get(card)
+      throw "Player doesn't have this card" unless card
+    @game.putDown card
+    @hand.remove card if card
