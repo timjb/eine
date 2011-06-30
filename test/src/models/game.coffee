@@ -28,21 +28,21 @@ describe "Game (model)", ->
       expect(nextPlayer).toBe p
       expect(game.currentPlayer()).toBe p
     expectPlayer tim
-    game.putDown(new Card('black', 'wish').wish('red'))
+    game.putDown(new Card(color:'black', symbol:'wish').wish('red'))
     expectPlayer christian
-    game.putDown(new Card 'red', 'reverse')
+    game.putDown(new Card color:'red', symbol:'reverse')
     expectPlayer tim
-    game.putDown(new Card 'red', '0')
+    game.putDown(new Card color:'red', symbol:'0')
     expectPlayer julia
-    game.putDown(new Card 'red', 'skip')
+    game.putDown(new Card color:'red', symbol:'skip')
     expectPlayer tim
 
   it "should give the next player some cards when I lay +2 or +4", ->
     me  = game.createPlayer()
     you = game.createPlayer()
     
-    plus4 = new Card('black', '+4').wish('green')
-    plus2 = new Card 'green', '+2'
+    plus4 = new Card(color:'black', symbol:'+4').wish('green')
+    plus2 = new Card color:'green', symbol:'+2'
     
     game.start()
     game.putDown plus4
@@ -58,6 +58,6 @@ describe "Game (model)", ->
   it "should throw an exception if the move isn't allowed", ->
     p = game.createPlayer()
     game.start()
-    game.putDown(new Card('black', 'wish').wish('green'))
-    expect(-> game.putDown(new Card 'red',   '7')).toThrow()
-    expect(-> game.putDown(new Card 'green', '3')).not.toThrow()
+    game.putDown(new Card(color:'black', symbol:'wish').wish('green'))
+    expect(-> game.putDown(new Card color:'red', symbol:'7')).toThrow()
+    expect(-> game.putDown(new Card color:'green', symbol:'3')).not.toThrow()

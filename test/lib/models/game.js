@@ -33,21 +33,39 @@
         return expect(game.currentPlayer()).toBe(p);
       };
       expectPlayer(tim);
-      game.putDown(new Card('black', 'wish').wish('red'));
+      game.putDown(new Card({
+        color: 'black',
+        symbol: 'wish'
+      }).wish('red'));
       expectPlayer(christian);
-      game.putDown(new Card('red', 'reverse'));
+      game.putDown(new Card({
+        color: 'red',
+        symbol: 'reverse'
+      }));
       expectPlayer(tim);
-      game.putDown(new Card('red', '0'));
+      game.putDown(new Card({
+        color: 'red',
+        symbol: '0'
+      }));
       expectPlayer(julia);
-      game.putDown(new Card('red', 'skip'));
+      game.putDown(new Card({
+        color: 'red',
+        symbol: 'skip'
+      }));
       return expectPlayer(tim);
     });
     it("should give the next player some cards when I lay +2 or +4", function() {
       var me, plus2, plus4, you;
       me = game.createPlayer();
       you = game.createPlayer();
-      plus4 = new Card('black', '+4').wish('green');
-      plus2 = new Card('green', '+2');
+      plus4 = new Card({
+        color: 'black',
+        symbol: '+4'
+      }).wish('green');
+      plus2 = new Card({
+        color: 'green',
+        symbol: '+2'
+      });
       game.start();
       game.putDown(plus4);
       expect(you.countCards()).toBe(App.Settings.startCount + 4);
@@ -63,12 +81,21 @@
       var p;
       p = game.createPlayer();
       game.start();
-      game.putDown(new Card('black', 'wish').wish('green'));
+      game.putDown(new Card({
+        color: 'black',
+        symbol: 'wish'
+      }).wish('green'));
       expect(function() {
-        return game.putDown(new Card('red', '7'));
+        return game.putDown(new Card({
+          color: 'red',
+          symbol: '7'
+        }));
       }).toThrow();
       return expect(function() {
-        return game.putDown(new Card('green', '3'));
+        return game.putDown(new Card({
+          color: 'green',
+          symbol: '3'
+        }));
       }).not.toThrow();
     });
   });

@@ -2,18 +2,18 @@ describe "Card (model)", ->
   Card = App.Models.Card
 
   it "allows me to lay 'normal' cards on top of others if the symbol or the number matches", ->
-    greenNine = new Card('green', '9')
-    expect(new Card('green', '7').matches(greenNine)).toBe yes
-    expect(new Card('red', '9').matches(greenNine)).toBe yes
-    expect(new Card('red', '7').matches(greenNine)).toBe no
+    greenNine = new Card color:'green', symbol:'9'
+    expect(new Card(color:'green', symbol:'7').matches greenNine).toBe yes
+    expect(new Card(color:'red', symbol:'9').matches greenNine).toBe yes
+    expect(new Card(color:'red', symbol:'7').matches greenNine).toBe no
 
   it "allows me to lay special (=wild) cards on every other card", ->
-    wishCard = new Card('black', 'wish').wish('red')
-    expect(wishCard.matches(new Card 'green', '9')).toBe yes
+    wishCard = new Card(color:'black', symbol:'wish').wish('red')
+    expect(wishCard.matches(new Card color:'green', symbol:'9')).toBe yes
 
   it "validates cards", ->
-    v = (args...) ->
-      card = new Card(args...)
+    v = (color, symbol) ->
+      card = new Card color:color, symbol:symbol
       not card.validate card.attributes
     
     # colors

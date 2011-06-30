@@ -1,30 +1,45 @@
 (function() {
-  var __slice = Array.prototype.slice;
   describe("Card (model)", function() {
     var Card;
     Card = App.Models.Card;
     it("allows me to lay 'normal' cards on top of others if the symbol or the number matches", function() {
       var greenNine;
-      greenNine = new Card('green', '9');
-      expect(new Card('green', '7').matches(greenNine)).toBe(true);
-      expect(new Card('red', '9').matches(greenNine)).toBe(true);
-      return expect(new Card('red', '7').matches(greenNine)).toBe(false);
+      greenNine = new Card({
+        color: 'green',
+        symbol: '9'
+      });
+      expect(new Card({
+        color: 'green',
+        symbol: '7'
+      }).matches(greenNine)).toBe(true);
+      expect(new Card({
+        color: 'red',
+        symbol: '9'
+      }).matches(greenNine)).toBe(true);
+      return expect(new Card({
+        color: 'red',
+        symbol: '7'
+      }).matches(greenNine)).toBe(false);
     });
     it("allows me to lay special (=wild) cards on every other card", function() {
       var wishCard;
-      wishCard = new Card('black', 'wish').wish('red');
-      return expect(wishCard.matches(new Card('green', '9'))).toBe(true);
+      wishCard = new Card({
+        color: 'black',
+        symbol: 'wish'
+      }).wish('red');
+      return expect(wishCard.matches(new Card({
+        color: 'green',
+        symbol: '9'
+      }))).toBe(true);
     });
     it("validates cards", function() {
       var v;
-      v = function() {
-        var args, card;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        card = (function(func, args, ctor) {
-          ctor.prototype = func.prototype;
-          var child = new ctor, result = func.apply(child, args);
-          return typeof result === "object" ? result : child;
-        })(Card, args, function() {});
+      v = function(color, symbol) {
+        var card;
+        card = new Card({
+          color: color,
+          symbol: symbol
+        });
         return !card.validate(card.attributes);
       };
       expect(v('green', '5')).toBe(true);

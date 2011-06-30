@@ -1,10 +1,6 @@
 class App.Models.Card extends Backbone.Model
-  constructor: (color, symbol) ->
-    # for compatibility reasons
-    Backbone.Model.call @,
-      color:   color
-      symbol:  symbol
-      special: color is @constructor.specialColor
+  initialize: ->
+    @set special:(@get('color') is @constructor.specialColor)
 
   matches: (other) ->
     @get('special') or
@@ -36,12 +32,12 @@ class App.Models.Card extends Backbone.Model
       for color in @colors
         for symbol in @normalSymbols
           for i in [0,1]
-            deck.push(new @ color, symbol)
+            deck.push(new @(color:color, symbol:symbol))
       
-      deck.push(new @ 'black', 'wish') for i in [1..4]
-      deck.push(new @ 'black', '+4')   for i in [1..2]
+      deck.push(new @(color:'black', symbol:'wish')) for i in [1..4]
+      deck.push(new @(color:'black', symbol:'+4'))   for i in [1..2]
     @_cachedDeck
 
   @random: ->
     randomCard = @deck()[Math.floor(Math.random() * @deck().length)]
-    new @ randomCard.get('color'), randomCard.get('symbol') # Use constructor => new cid
+    new @ randomCard # Use constructor => new cid

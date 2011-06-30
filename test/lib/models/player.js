@@ -8,7 +8,10 @@
       game = new Game;
       player = game.createPlayer();
       expect(player.countCards()).toBe(startCount);
-      player.receive(new Card('black', 'wish'));
+      player.receive(new Card({
+        color: 'black',
+        symbol: 'wish'
+      }));
       return expect(player.countCards()).toBe(startCount + 1);
     });
     it("should draw cards", function() {

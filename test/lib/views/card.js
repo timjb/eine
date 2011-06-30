@@ -6,7 +6,10 @@
   describe("Card (view)", function() {
     return it("has it's color as it's class and it's symbol as it's content", function() {
       var card, view;
-      card = new CardM('yellow', '6');
+      card = new CardM({
+        color: 'yellow',
+        symbol: '6'
+      });
       view = new CardV({
         model: card
       }).render();

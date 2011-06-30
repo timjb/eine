@@ -8,7 +8,18 @@
     it("should display a list of cards", function() {
       var cards, el, hand, view;
       hand = new HandC;
-      hand.add([new Card('red', '3'), new Card('black', '+4'), new Card('yellow', 'skip')]);
+      hand.add([
+        new Card({
+          color: 'red',
+          symbol: '3'
+        }), new Card({
+          color: 'black',
+          symbol: '+4'
+        }), new Card({
+          color: 'yellow',
+          symbol: 'skip'
+        })
+      ]);
       view = new HandV({
         collection: hand
       });
@@ -22,13 +33,24 @@
     return it("should refresh automatically", function() {
       var el, hand, view;
       hand = new HandC;
-      hand.add([new Card('blue', 'reverse'), new Card('green', '1')]);
+      hand.add([
+        new Card({
+          color: 'blue',
+          symbol: 'reverse'
+        }), new Card({
+          color: 'green',
+          symbol: '1'
+        })
+      ]);
       view = new HandV({
         collection: hand
       });
       el = $(view.render().el);
       expect($('li .card', el).length).toBe(2);
-      hand.add(new Card('red', '8'));
+      hand.add(new Card({
+        color: 'red',
+        symbol: '8'
+      }));
       return expect($('li .card', el).length).toBe(3);
     });
   });
