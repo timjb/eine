@@ -17,7 +17,10 @@ class App.Models.Game extends Backbone.Model
   start: ->
     @set current:0
     @set clockwise:yes
-    @set open:Card.random()
+    
+    until open and (open.get 'symbol').match /[0-9]/
+      open = Card.random()
+    @set open:open
     
     @trigger 'next', @currentPlayer()
 

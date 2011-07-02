@@ -12,6 +12,14 @@ describe "Game (model)", ->
     expect(tom.countCards()).toBe App.Settings.startCount
     expect(game.players.length).toBe 2
 
+  it "should open a 'normal' card at the beginning", ->
+    _.times 25, ->
+      game = new Game
+      expect(game.get 'open').not.toBeDefined()
+      game.start()
+      open = game.get 'open'
+      expect(open.get 'symbol').toMatch /[0-9]/
+
   it "should tell me who's turn it is", ->
     tim       = game.createPlayer()
     christian = game.createPlayer()

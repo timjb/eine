@@ -16,6 +16,16 @@
       expect(tom.countCards()).toBe(App.Settings.startCount);
       return expect(game.players.length).toBe(2);
     });
+    it("should open a 'normal' card at the beginning", function() {
+      return _.times(25, function() {
+        var open;
+        game = new Game;
+        expect(game.get('open')).not.toBeDefined();
+        game.start();
+        open = game.get('open');
+        return expect(open.get('symbol')).toMatch(/[0-9]/);
+      });
+    });
     it("should tell me who's turn it is", function() {
       var christian, expectPlayer, julia, nextPlayer, tim;
       tim = game.createPlayer();
