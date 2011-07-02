@@ -30,7 +30,7 @@
       expect(cards.eq(1).hasClass('yellow')).toBe(true);
       return expect(cards.eq(2).hasClass('black')).toBe(true);
     });
-    return it("should refresh automatically", function() {
+    it("should refresh automatically", function() {
       var el, hand, view;
       hand = new HandC;
       hand.add([
@@ -52,6 +52,32 @@
         symbol: '8'
       }));
       return expect($('li .card', el).length).toBe(3);
+    });
+    return it("should trigger 'click:card' when a user clicks a card", function() {
+      var a, b, cardsEls, clickedCard, hand, view;
+      hand = new HandC;
+      hand.add([
+        a = new Card({
+          color: 'blue',
+          symbol: '3'
+        }), b = new Card({
+          color: 'blue',
+          symbol: '+2'
+        })
+      ]);
+      view = new HandV({
+        collection: hand
+      }).render();
+      clickedCard = null;
+      view.bind('click:card', function(c) {
+        return clickedCard = c;
+      });
+      expect(clickedCard).toBeNull();
+      cardsEls = $('.card', view.el);
+      cardsEls.eq(1).click();
+      expect(clickedCard).toBe(b);
+      cardsEls.eq(0).click();
+      return expect(clickedCard).toBe(a);
     });
   });
 }).call(this);

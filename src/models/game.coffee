@@ -5,8 +5,9 @@ class App.Models.Game extends Backbone.Model
     @players = []
     @bind 'next', => @_didDraw = no
 
-  createPlayer: ->
+  createPlayer: (type) ->
     player = new Player @
+    player.type = type
     @players.push player
     @_give player, App.Settings.startCount
     player

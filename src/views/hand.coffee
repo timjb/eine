@@ -17,8 +17,10 @@ class App.Views.Hand extends Backbone.View
   render: ->
     el = $ @el
     el.html('')
-    @collection.each (card) ->
+    @collection.each (card) =>
+      view = new CardV(model:card).render()
+      view.bind 'click', => @trigger 'click:card', card
       $('<li />')
-        .append(new CardV(model:card).render().el)
+        .append(view.el)
         .appendTo(el)
     this

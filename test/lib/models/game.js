@@ -8,12 +8,14 @@
       return game = new Game;
     });
     it("should create players", function() {
-      var tim, tom;
+      var deepBlue, tim;
       expect(game.players).toEqual([]);
-      tim = game.createPlayer();
+      tim = game.createPlayer('human');
+      expect(tim.type).toBe('human');
       expect(tim.countCards()).toBe(App.Settings.startCount);
-      tom = game.createPlayer();
-      expect(tom.countCards()).toBe(App.Settings.startCount);
+      deepBlue = game.createPlayer('computer');
+      expect(deepBlue.type).toBe('computer');
+      expect(deepBlue.countCards()).toBe(App.Settings.startCount);
       return expect(game.players.length).toBe(2);
     });
     it("should open a 'normal' card at the beginning", function() {

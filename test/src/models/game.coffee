@@ -6,10 +6,12 @@ describe "Game (model)", ->
 
   it "should create players", ->
     expect(game.players).toEqual []
-    tim = game.createPlayer()
+    tim = game.createPlayer 'human'
+    expect(tim.type).toBe 'human'
     expect(tim.countCards()).toBe App.Settings.startCount
-    tom = game.createPlayer()
-    expect(tom.countCards()).toBe App.Settings.startCount
+    deepBlue = game.createPlayer 'computer'
+    expect(deepBlue.type).toBe 'computer'
+    expect(deepBlue.countCards()).toBe App.Settings.startCount
     expect(game.players.length).toBe 2
 
   it "should open a 'normal' card at the beginning", ->

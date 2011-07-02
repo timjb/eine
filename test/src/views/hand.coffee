@@ -32,3 +32,21 @@ describe "Hand (view)", ->
     expect($('li .card', el).length).toBe 2
     hand.add(new Card color:'red', symbol:'8')
     expect($('li .card', el).length).toBe 3
+
+  it "should trigger 'click:card' when a user clicks a card", ->
+    hand = new HandC
+    hand.add [
+      a = new Card color:'blue', symbol:'3'
+      b = new Card color:'blue', symbol:'+2'
+    ]
+    view = new HandV(collection:hand).render()
+    
+    clickedCard = null
+    view.bind 'click:card', (c) -> clickedCard = c
+    
+    expect(clickedCard).toBeNull()
+    cardsEls = $ '.card', view.el
+    cardsEls.eq(1).click()
+    expect(clickedCard).toBe b
+    cardsEls.eq(0).click()
+    expect(clickedCard).toBe a
