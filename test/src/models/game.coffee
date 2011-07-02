@@ -6,21 +6,16 @@ describe "Game (model)", ->
 
   it "should create players", ->
     expect(game.players).toEqual []
+    triggered = no
+    game.bind 'add:player', -> triggered = yes
     tim = game.createPlayer 'human'
+    expect(triggered).toBe yes
     expect(tim.type).toBe 'human'
     expect(tim.countCards()).toBe App.Settings.startCount
     deepBlue = game.createPlayer 'computer'
     expect(deepBlue.type).toBe 'computer'
     expect(deepBlue.countCards()).toBe App.Settings.startCount
     expect(game.players.length).toBe 2
-
-  it "should open a 'normal' card at the beginning", ->
-    _.times 25, ->
-      game = new Game
-      expect(game.get 'open').not.toBeDefined()
-      game.start()
-      open = game.get 'open'
-      expect(open.get 'symbol').toMatch /[0-9]/
 
   it "should tell me who's turn it is", ->
     tim       = game.createPlayer()
@@ -60,10 +55,12 @@ describe "Game (model)", ->
     game.putDown plus2
     expect(me.countCards()).toBe App.Settings.startCount + 2
 
-  it "should uncover a random card at game start", ->
-    expect(game.get 'open').not.toBeInstanceof(Card)
-    game.start()
-    expect(game.get 'open').toBeInstanceof(Card)
+  it "should uncover a numbered, random card at game start", ->
+    _.times 25, ->
+      game = new Game
+      game.start()
+      expect(game.get 'open').toBeInstanceof(Card)
+      expect((game.get 'open').get 'symbol').toMatch /[0-9]/
 
   it "should throw an exception if the move isn't allowed", ->
     p = game.createPlayer()

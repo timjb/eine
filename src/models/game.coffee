@@ -4,12 +4,17 @@ class App.Models.Game extends Backbone.Model
   initialize: ->
     @players = []
     @bind 'next', => @_didDraw = no
+    
+    until open and (open.get 'symbol').match /[0-9]/
+      open = Card.random()
+    @set open:open
 
   createPlayer: (type) ->
     player = new Player @
     player.type = type
     @players.push player
     @_give player, App.Settings.startCount
+    @trigger 'add:player'
     player
   
   _give: (player, n) ->
@@ -18,10 +23,6 @@ class App.Models.Game extends Backbone.Model
   start: ->
     @set current:0
     @set clockwise:yes
-    
-    until open and (open.get 'symbol').match /[0-9]/
-      open = Card.random()
-    @set open:open
     
     @trigger 'next', @currentPlayer()
 

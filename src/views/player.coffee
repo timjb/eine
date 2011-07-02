@@ -1,6 +1,8 @@
 {Hand} = App.Views
 
 class App.Views.Player extends Backbone.View
+  className: 'player'
+
   initialize: ->
     @model.game.bind 'next', (current) =>
       $(@el)[if current is @model then 'addClass' else 'removeClass']('current')

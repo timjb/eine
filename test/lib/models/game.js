@@ -8,25 +8,20 @@
       return game = new Game;
     });
     it("should create players", function() {
-      var deepBlue, tim;
+      var deepBlue, tim, triggered;
       expect(game.players).toEqual([]);
+      triggered = false;
+      game.bind('add:player', function() {
+        return triggered = true;
+      });
       tim = game.createPlayer('human');
+      expect(triggered).toBe(true);
       expect(tim.type).toBe('human');
       expect(tim.countCards()).toBe(App.Settings.startCount);
       deepBlue = game.createPlayer('computer');
       expect(deepBlue.type).toBe('computer');
       expect(deepBlue.countCards()).toBe(App.Settings.startCount);
       return expect(game.players.length).toBe(2);
-    });
-    it("should open a 'normal' card at the beginning", function() {
-      return _.times(25, function() {
-        var open;
-        game = new Game;
-        expect(game.get('open')).not.toBeDefined();
-        game.start();
-        open = game.get('open');
-        return expect(open.get('symbol')).toMatch(/[0-9]/);
-      });
     });
     it("should tell me who's turn it is", function() {
       var christian, expectPlayer, julia, nextPlayer, tim;
@@ -84,10 +79,13 @@
       game.putDown(plus2);
       return expect(me.countCards()).toBe(App.Settings.startCount + 2);
     });
-    it("should uncover a random card at game start", function() {
-      expect(game.get('open')).not.toBeInstanceof(Card);
-      game.start();
-      return expect(game.get('open')).toBeInstanceof(Card);
+    it("should uncover a numbered, random card at game start", function() {
+      return _.times(25, function() {
+        game = new Game;
+        game.start();
+        expect(game.get('open')).toBeInstanceof(Card);
+        return expect((game.get('open')).get('symbol')).toMatch(/[0-9]/);
+      });
     });
     return it("should throw an exception if the move isn't allowed", function() {
       var p;
