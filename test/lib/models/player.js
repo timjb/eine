@@ -17,17 +17,17 @@
     it("should draw cards", function() {
       var card, game, hasCard, i, nina, tim, _i, _len, _ref2, _results;
       hasCard = function(player, card) {
-        var doesShe;
-        doesShe = false;
-        player.hand.each(function(card2) {
+        var card2, _i, _len, _ref2;
+        _ref2 = player.hand.models;
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          card2 = _ref2[_i];
           if (card.get('color') === card2.get('color') && card.get('symbol') === card2.get('symbol')) {
-            return doesShe = true;
+            return true;
           }
-        });
-        return doesShe;
+        }
       };
       _results = [];
-      for (i = 1; i <= 5; i++) {
+      for (i = 1; i <= 10; i++) {
         game = new Game;
         tim = game.createPlayer();
         nina = game.createPlayer();
@@ -61,7 +61,9 @@
               }
               nina.playCard(card);
               expect(nina.countCards()).toBe(startCount - 1);
-              expect(game.currentPlayer()).toBe(tim);
+              if (card.get('symbol') !== 'skip') {
+                expect(game.currentPlayer()).toBe(tim);
+              }
               break;
             }
           }

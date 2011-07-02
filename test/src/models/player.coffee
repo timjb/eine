@@ -11,13 +11,11 @@ describe "Player (model)", ->
 
   it "should draw cards", ->
     hasCard = (player, card) ->
-      doesShe = no
-      player.hand.each (card2) ->
-        doesShe = yes if card.get('color')  is card2.get('color') and
-                         card.get('symbol') is card2.get('symbol')
-      doesShe
+      for card2 in player.hand.models
+        return yes if card.get('color')  is card2.get('color') and
+                      card.get('symbol') is card2.get('symbol')
 
-    for i in [1..5]
+    for i in [1..10]
       game = new Game
       tim  = game.createPlayer() # me
       nina = game.createPlayer() # my sister
@@ -39,7 +37,7 @@ describe "Player (model)", ->
           card.wish 'green' if card.get 'special'
           nina.playCard card
           expect(nina.countCards()).toBe(startCount - 1)
-          expect(game.currentPlayer()).toBe tim
+          expect(game.currentPlayer()).toBe tim if card.get('symbol') isnt 'skip'
           break
 
   it "should know how to play uno", ->
