@@ -14,3 +14,5 @@ class App.Views.Card extends Backbone.View
     this
 
   triggerClick: -> @trigger 'click'
+
+  @closedHtml = '<div class="card closed"><span class="symbol">?</span><span class="symbol">?</span></div>'

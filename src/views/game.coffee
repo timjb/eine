@@ -1,6 +1,8 @@
 {Card, Player} = App.Views
 
 class App.Views.Game extends Backbone.View
+  className: 'game'
+
   initialize: ->
     _.bindAll this, 'render'
     
@@ -12,7 +14,7 @@ class App.Views.Game extends Backbone.View
     
     openCard = $((new Card model:(@model.get 'open')).render().el).addClass('open')
     
-    closedCard = $('<div class="card closed" />').click =>
+    closedCard = $(Card.closedHtml).click =>
       current = @model.currentPlayer()
       current.playCard null if current.type is 'human'
     
@@ -32,7 +34,6 @@ class App.Views.Game extends Backbone.View
       @model.players[i % @model.players.length]
     
     POSITIONS = switch @model.players.length
-      when 0 then undefined
       when 1 then ['bottom']
       when 2 then ['bottom', 'top']
       when 3 then ['bottom', 'left', 'right']
