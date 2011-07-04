@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <h1>Eine</h1>
+  <!--<h1>Eine</h1>-->
   <script src="javascripts/jquery-min.js"></script>
   <script src="javascripts/underscore-min.js"></script>
   <script src="javascripts/backbone-min.js"></script>
@@ -41,6 +41,7 @@
       ,   computer3 = game.createPlayer('computer')
       game.bind('next', function (player) {
         if (player.type === 'computer') {
+          setTimeout(function() { player.playAI() }, 500)
         }
       })
       game.start()

@@ -5,8 +5,10 @@ describe "Player (model)", ->
   it "should receive cards", ->
     game = new Game
     player = game.createPlayer()
+    player.bind 'card', (spy = jasmine.createSpy())
     expect(player.countCards()).toBe startCount
     player.receive(new Card color:'black', symbol:'wish')
+    expect(spy).toHaveBeenCalled()
     expect(player.countCards()).toBe startCount + 1
 
   it "should draw cards", ->
@@ -19,11 +21,14 @@ describe "Player (model)", ->
       game = new Game
       tim  = game.createPlayer() # me
       nina = game.createPlayer() # my sister
+      tim.bind  'card', (timSpy  = jasmine.createSpy())
+      nina.bind 'card', (ninaSpy = jasmine.createSpy())
       game.start()
       
       expect(tim.countCards()).toBe startCount
       expect(game.currentPlayer()).toBe tim
       tim.playCard null
+      expect(timSpy).toHaveBeenCalled()
       expect(tim.countCards()).toBe(startCount + 1)
       expect(game.currentPlayer()).toBe tim
       tim.playCard null
@@ -32,10 +37,12 @@ describe "Player (model)", ->
       for card in Card.deck()
         if not hasCard(nina, card) or not card.matches(game.get 'open')
           expect(-> nina.playCard card).toThrow()
+      expect(ninaSpy).not.toHaveBeenCalled()
       for card in nina.hand.models
         if card.matches(game.get 'open')
           card.wish 'green' if card.get 'special'
           nina.playCard card
+          expect(ninaSpy).toHaveBeenCalled()
           expect(nina.countCards()).toBe(startCount - 1)
           expect(game.currentPlayer()).toBe tim if card.get('symbol') isnt 'skip'
           break

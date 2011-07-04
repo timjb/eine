@@ -35,6 +35,25 @@
       expect($(p1V.el).hasClass('winner')).toBe(true);
       return expect($(p2V.el).hasClass('winner')).toBe(false);
     });
+    it("shows the numbe of cards a player has if the player is not human", function() {
+      var cp1, cp1View, game, me, meView;
+      game = new Game;
+      me = game.createPlayer('human');
+      cp1 = game.createPlayer('computer');
+      meView = new PlayerV({
+        model: me
+      });
+      cp1View = new PlayerV({
+        model: cp1
+      });
+      cp1View.render();
+      game.start();
+      expect($('.count', meView.render().el).length).toBe(0);
+      return _.times(5, function() {
+        game.currentPlayer().playAI();
+        return expect(+$('.count', cp1View.el).text()).toBe(cp1.countCards());
+      });
+    });
     it("shows the player's hand if the player's human", function() {
       var aiPlayer, game, humanPlayer;
       game = new Game;

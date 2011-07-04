@@ -26,6 +26,19 @@ describe "Player (view)", ->
     expect($(p1V.el).hasClass 'winner').toBe yes
     expect($(p2V.el).hasClass 'winner').toBe no
 
+  it "shows the numbe of cards a player has if the player is not human", ->
+    game = new Game
+    me   = game.createPlayer 'human'
+    cp1  = game.createPlayer 'computer'
+    meView = new PlayerV model:me
+    cp1View = new PlayerV model:cp1
+    cp1View.render()
+    game.start()
+    expect($('.count', meView.render().el).length).toBe 0
+    _.times 5, ->
+      game.currentPlayer().playAI()
+      expect(+$('.count', cp1View.el).text()).toBe cp1.countCards()
+
   it "shows the player's hand if the player's human", ->
     game = new Game
     aiPlayer    = game.createPlayer 'computer'

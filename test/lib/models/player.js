@@ -4,18 +4,20 @@
   startCount = App.Settings.startCount;
   describe("Player (model)", function() {
     it("should receive cards", function() {
-      var game, player;
+      var game, player, spy;
       game = new Game;
       player = game.createPlayer();
+      player.bind('card', (spy = jasmine.createSpy()));
       expect(player.countCards()).toBe(startCount);
       player.receive(new Card({
         color: 'black',
         symbol: 'wish'
       }));
+      expect(spy).toHaveBeenCalled();
       return expect(player.countCards()).toBe(startCount + 1);
     });
     it("should draw cards", function() {
-      var card, game, hasCard, i, nina, tim, _i, _len, _ref2, _results;
+      var card, game, hasCard, i, nina, ninaSpy, tim, timSpy, _i, _len, _ref2, _results;
       hasCard = function(player, card) {
         var card2, _i, _len, _ref2;
         _ref2 = player.hand.models;
@@ -31,10 +33,13 @@
         game = new Game;
         tim = game.createPlayer();
         nina = game.createPlayer();
+        tim.bind('card', (timSpy = jasmine.createSpy()));
+        nina.bind('card', (ninaSpy = jasmine.createSpy()));
         game.start();
         expect(tim.countCards()).toBe(startCount);
         expect(game.currentPlayer()).toBe(tim);
         tim.playCard(null);
+        expect(timSpy).toHaveBeenCalled();
         expect(tim.countCards()).toBe(startCount + 1);
         expect(game.currentPlayer()).toBe(tim);
         tim.playCard(null);
@@ -49,6 +54,7 @@
             }).toThrow();
           }
         }
+        expect(ninaSpy).not.toHaveBeenCalled();
         _results.push((function() {
           var _j, _len2, _ref3, _results2;
           _ref3 = nina.hand.models;
@@ -60,6 +66,7 @@
                 card.wish('green');
               }
               nina.playCard(card);
+              expect(ninaSpy).toHaveBeenCalled();
               expect(nina.countCards()).toBe(startCount - 1);
               if (card.get('symbol') !== 'skip') {
                 expect(game.currentPlayer()).toBe(tim);

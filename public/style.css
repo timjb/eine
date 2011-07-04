@@ -5,6 +5,10 @@ body {
   background: #0d3502 url("background.png"); color: #fff;
 }
 
+html, body, .game {
+  width: 100%; height: 100%;
+}
+
 .card {
   width: 100px; height: 150px;
   background: #fff;
@@ -13,20 +17,49 @@ body {
   border-style: solid; border-width: 10px; border-color: #fff;
   -webkit-box-shadow: 2px 2px 10px #0a2d00;
 }
+
+/* original dimensions * 60% */
+.player .card { width: 60px; height: 90px; border-width: 6px; }
+
 .card.closed { border-color: #888888; color: #888888; background: #000; }
 .card.yellow { border-color: #fff539; color: #fff539; }
 .card.green  { border-color: #089720; color: #089720; }
 .card.blue   { border-color: #0747ff; color: #0747ff; }
 .card.red    { border-color: #d50b00; color: #d50b00; }
-.card .symbol {
-  display: block;
-  position: absolute; left: 5px; right: 5px;
+
+.card .symbol { display: block; position: absolute; left: 5px; right: 5px; }
+.card .symbol:first-child { top: 5px; text-align: left; }
+.card .symbol ~ .symbol { bottom: 5px; text-align: right; }
+
+.open, .closed {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -85px;
 }
-.card .symbol:first-child {
-  top: 5px;
-  text-align: left;
+.open   { margin-left: -130px; }
+.closed { margin-left: 10px; }
+
+.player {
+  position: absolute;
+  font-size: 14px; line-height: 22px;
+  background: rgba(255,255,255,.1);
 }
-.card .symbol ~ .symbol {
-  bottom: 5px;
-  text-align: right;
+.player.current { background: rgba(255,255,255,.5); }
+.player.winner  { background: #fff; }
+.player.bottom {
+  bottom: 0; left: 50px;
+  padding: 10px;
 }
+
+.player.left, .player.right { top: 50%; margin-top: -11px; }
+.player.left  { left: 0; }
+.player.right { right: 0; }
+.player.top   { left: 50%; top: 0; }
+
+.player ol { list-style: none; }
+.player li { float: left; }
+.player li .card { -webkit-transform: rotate(2deg); -webkit-transition: -webkit-transform 0.3s ease; }
+.player li:nth-child(2n) .card { -webkit-transform: rotate(-4deg); }
+.player li:nth-child(3n) .card { -webkit-transform: rotate(12deg); }
+.player li .card:hover { -webkit-transform: rotate(0) translate(0, -10px); }
