@@ -25,7 +25,7 @@ describe "Game (view)", ->
     expect(p1.countCards()).toBe(App.Settings.startCount + 1)
     expect(game.currentPlayer()).toBe(p1)
     closedCard.click()
-    expect(game.currentPlayer()).toBe(p1)
+    expect(game.currentPlayer()).toBe(p2)
 
   describe "it displays the players", ->
     game = view = el = human = null

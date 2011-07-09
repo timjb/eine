@@ -8,19 +8,23 @@ class App.Views.Game extends Backbone.View
   initialize: (options, @humanPlayer) ->
     _.bindAll this, 'render'
     
-    @model.bind 'change:open', @render
-    @model.players.bind 'all', @render
+    @model.bind 'change:open', =>
+      @_openCard().replaceAll(@$('.open'))
+    @model.players.bind('add', @render)
+
+  _openCard: ->
+    $((new Card model:(@model.get 'open')).render().el).addClass('open')
+
+  _closedCard: ->
+    $(Card.closedHtml).click =>
+      current = @model.currentPlayer()
+      current.playCard null if current is @humanPlayer
 
   render: ->
     $(@el).html('')
     
-    openCard = $((new Card model:(@model.get 'open')).render().el).addClass('open')
-      .appendTo(@el)
-    
-    closedCard = $(Card.closedHtml).click =>
-      current = @model.currentPlayer()
-      current.playCard null if current is @humanPlayer
-    closedCard.appendTo(@el)
+    @_openCard().appendTo(@el)
+    @_closedCard().appendTo(@el)
     
     humanPlayerView = new Player model:@humanPlayer, yes
     $(humanPlayerView.render().el)

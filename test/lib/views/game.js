@@ -39,7 +39,7 @@
       expect(p1.countCards()).toBe(App.Settings.startCount + 1);
       expect(game.currentPlayer()).toBe(p1);
       closedCard.click();
-      return expect(game.currentPlayer()).toBe(p1);
+      return expect(game.currentPlayer()).toBe(p2);
     });
     return describe("it displays the players", function() {
       var el, game, human, view;
