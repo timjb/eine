@@ -42,6 +42,16 @@ describe "Player (view)", ->
       game.currentPlayer().playAI()
       expect(+$('.number-of-cards', cp1View.el).text()).toBe cp1.countCards()
 
+  it "should say eine if the user clicks the 'Eine!' button", ->
+    game   = new Game
+    winner = game.createPlayer name:"I"
+    loser  = game.createPlayer name:"You"
+    view   = new PlayerV model:winner, yes
+    game.start()
+    expect(game._saidEine).toBe no
+    $('.eine-button', view.render().el).click()
+    expect(game._saidEine).toBe yes
+
   it "shows the player's hand if the player's human", ->
     game = new Game
     aiPlayer    = game.createPlayer name:"Computer"

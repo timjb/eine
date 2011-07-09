@@ -21,9 +21,16 @@ class App.Views.Player extends Backbone.View
   _updateNumberOfCards: ->
     @$('.number-of-cards').text @model.get('numberOfCards')
 
+  _eineButton: ->
+    $('<a href="#" class="eine-button">Eine!</a>').click (event) =>
+      event.preventDefault()
+      @model.eine()
+
   render: ->
     if @isHuman # local, human player
-      $(@el).append(@handView.render().el)
+      $(@el)
+        .append(@handView.render().el)
+        .append(@_eineButton())
     else
       $(@el)
         .html """

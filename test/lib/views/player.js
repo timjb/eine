@@ -65,6 +65,23 @@
         return expect(+$('.number-of-cards', cp1View.el).text()).toBe(cp1.countCards());
       });
     });
+    it("should say eine if the user clicks the 'Eine!' button", function() {
+      var game, loser, view, winner;
+      game = new Game;
+      winner = game.createPlayer({
+        name: "I"
+      });
+      loser = game.createPlayer({
+        name: "You"
+      });
+      view = new PlayerV({
+        model: winner
+      }, true);
+      game.start();
+      expect(game._saidEine).toBe(false);
+      $('.eine-button', view.render().el).click();
+      return expect(game._saidEine).toBe(true);
+    });
     it("shows the player's hand if the player's human", function() {
       var aiPlayer, game, humanPlayer;
       game = new Game;
