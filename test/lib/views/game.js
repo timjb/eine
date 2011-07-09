@@ -7,43 +7,58 @@
     it("displays the open card and a closed stack", function() {
       var el, game, p1, p2, view;
       game = new GameM;
-      p1 = game.createPlayer();
-      p2 = game.createPlayer();
+      p1 = game.createPlayer({
+        name: "P1"
+      });
+      p2 = game.createPlayer({
+        name: "P2"
+      });
       game.start();
       view = new GameV({
         model: game
-      });
+      }, p1);
       el = view.render().el;
       expect($('.card.closed', el).length).toBe(1);
       return expect($('.card.open', el).html()).toMatch(game.get('open').get('symbol'));
     });
     it("let's the player draw a card if he clicks on the closed stack", function() {
-      var game, p1, p2, view;
+      var closedCard, game, p1, p2, view;
       game = new GameM;
-      p1 = game.createPlayer('human');
-      p2 = game.createPlayer('computer');
-      game.start();
+      p1 = game.createPlayer({
+        name: "Mensch"
+      });
+      p2 = game.createPlayer({
+        name: "Maschine"
+      });
       view = new GameV({
         model: game
-      });
-      $('.card.closed', view.render().el).click().click();
+      }, p1);
+      game.start();
+      closedCard = $('.card.closed', view.render().el);
+      closedCard.click();
       expect(p1.countCards()).toBe(App.Settings.startCount + 1);
-      return expect(game.currentPlayer()).toBe(p2);
+      expect(game.currentPlayer()).toBe(p1);
+      closedCard.click();
+      return expect(game.currentPlayer()).toBe(p1);
     });
     return describe("it displays the players", function() {
       var el, game, human, view;
       game = view = el = human = null;
       beforeEach(function() {
         game = new GameM;
+        human = game.createPlayer({
+          name: "Ali"
+        });
         view = new GameV({
           model: game
-        });
-        el = view.render().el;
-        return human = game.createPlayer('human');
+        }, human);
+        return el = view.render().el;
       });
       it("2 players", function() {
         var c1, playerEls;
-        c1 = game.createPlayer('computer');
+        c1 = game.createPlayer({
+          name: "EinePlayer2000"
+        });
         game.start();
         playerEls = $('.player', el);
         expect(playerEls.eq(0)).toHaveClass('bottom');
@@ -51,8 +66,12 @@
       });
       it("3 players", function() {
         var c1, c2, playerEls;
-        c1 = game.createPlayer('computer');
-        c2 = game.createPlayer('computer');
+        c1 = game.createPlayer({
+          name: "EinePlayer2000"
+        });
+        c2 = game.createPlayer({
+          name: "Plague"
+        });
         game.start();
         playerEls = $('.player', el);
         expect(playerEls.eq(0)).toHaveClass('bottom');
@@ -61,9 +80,15 @@
       });
       return it("4 players", function() {
         var c1, c2, c3, playerEls;
-        c1 = game.createPlayer('computer');
-        c2 = game.createPlayer('computer');
-        c3 = game.createPlayer('computer');
+        c1 = game.createPlayer({
+          name: "EinePlayer2000"
+        });
+        c2 = game.createPlayer({
+          name: "Plague"
+        });
+        c3 = game.createPlayer({
+          name: "LISP"
+        });
         game.start();
         playerEls = $('.player', el);
         expect(playerEls.eq(0)).toHaveClass('bottom');

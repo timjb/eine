@@ -8,11 +8,15 @@
     it("gives the current player the css class 'current' and the winner 'winner'", function() {
       var game, p1, p1V, p2, p2V, winner;
       game = new Game;
-      p1 = game.createPlayer();
+      p1 = game.createPlayer({
+        name: "P1"
+      });
       p1V = new PlayerV({
         model: p1
       });
-      p2 = game.createPlayer();
+      p2 = game.createPlayer({
+        name: "P2"
+      });
       p2.eine = function() {};
       p2V = new PlayerV({
         model: p2
@@ -38,14 +42,18 @@
     it("shows the numbe of cards a player has if the player is not human", function() {
       var cp1, cp1View, game, me, meView;
       game = new Game;
-      me = game.createPlayer('human');
-      cp1 = game.createPlayer('computer');
+      me = game.createPlayer({
+        name: "human"
+      });
+      cp1 = game.createPlayer({
+        name: "computer"
+      });
       meView = new PlayerV({
         model: me
-      });
+      }, true);
       cp1View = new PlayerV({
         model: cp1
-      });
+      }, false);
       cp1View.render();
       game.start();
       expect($('.count', meView.render().el).length).toBe(0);
@@ -57,20 +65,25 @@
     it("shows the player's hand if the player's human", function() {
       var aiPlayer, game, humanPlayer;
       game = new Game;
-      aiPlayer = game.createPlayer('computer');
-      humanPlayer = game.createPlayer('human');
+      aiPlayer = game.createPlayer({
+        name: "Computer"
+      });
+      humanPlayer = game.createPlayer({
+        name: "Human"
+      });
       expect($('.card', new PlayerV({
         model: aiPlayer
-      }).render().el).length).toBe(0);
+      }, false).render().el).length).toBe(0);
       return expect($('.card', new PlayerV({
         model: humanPlayer
-      }).render().el).length).not.toBe(0);
+      }, true).render().el).length).not.toBe(0);
     });
     return it("plays a card when the user clicks on it", function() {
       var aiPlayer, g5, g6, g7, g8, g9, game, humanPlayer, view;
       game = new Game;
-      game = new Game;
-      humanPlayer = game.createPlayer('human');
+      humanPlayer = game.createPlayer({
+        name: "human"
+      });
       humanPlayer.hand = new Hand;
       humanPlayer.hand.add([
         g5 = new Card({
@@ -90,7 +103,9 @@
           symbol: '9'
         })
       ]);
-      aiPlayer = game.createPlayer('computer');
+      aiPlayer = game.createPlayer({
+        name: "computer"
+      });
       game.start();
       game.set({
         'open': new Card({
@@ -100,7 +115,7 @@
       });
       view = new PlayerV({
         model: humanPlayer
-      });
+      }, true);
       $('.card', view.render().el).eq(1).click();
       expect(humanPlayer.hand.length).toBe(4);
       return expect(game.get('open')).toBe(g6);

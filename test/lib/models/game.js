@@ -8,37 +8,38 @@
       return game = new Game;
     });
     it("should create players", function() {
-      var deepBlue, tim, triggered;
-      expect(game.players).toEqual([]);
-      triggered = false;
-      game.bind('add:player', function() {
-        return triggered = true;
+      var deepBlue, tim;
+      expect(game.players.length).toBe(0);
+      tim = game.createPlayer({
+        name: "Tim"
       });
-      tim = game.createPlayer('human');
-      expect(triggered).toBe(true);
-      expect(tim.type).toBe('human');
       expect(tim.countCards()).toBe(App.Settings.startCount);
-      deepBlue = game.createPlayer('computer');
-      expect(deepBlue.type).toBe('computer');
+      deepBlue = game.createPlayer({
+        name: "Deep Blue"
+      });
       expect(deepBlue.countCards()).toBe(App.Settings.startCount);
       return expect(game.players.length).toBe(2);
     });
     it("should tell me who's turn it is", function() {
       var christian, expectPlayer, julia, nextPlayer, tim;
-      tim = game.createPlayer();
-      christian = game.createPlayer();
-      julia = game.createPlayer();
+      tim = game.createPlayer({
+        name: "Tim"
+      });
+      christian = game.createPlayer({
+        name: "Christian"
+      });
+      julia = game.createPlayer({
+        name: "Julia"
+      });
       nextPlayer = null;
       game.bind('next', function(p) {
         return nextPlayer = p;
       });
-      expect(nextPlayer).toBeNull();
-      expect(game.currentPlayer()).toBeNull();
-      game.start();
       expectPlayer = function(p) {
         expect(nextPlayer).toBe(p);
         return expect(game.currentPlayer()).toBe(p);
       };
+      game.start();
       expectPlayer(tim);
       game.putDown(new Card({
         color: 'black',
@@ -63,8 +64,12 @@
     });
     it("should give the next player some cards when I lay +2 or +4", function() {
       var me, plus2, plus4, you;
-      me = game.createPlayer();
-      you = game.createPlayer();
+      me = game.createPlayer({
+        name: "Tim"
+      });
+      you = game.createPlayer({
+        name: "You"
+      });
       plus4 = new Card({
         color: 'black',
         symbol: '+4'
@@ -79,17 +84,19 @@
       game.putDown(plus2);
       return expect(me.countCards()).toBe(App.Settings.startCount + 2);
     });
-    it("should uncover a numbered, random card at game start", function() {
+    it("should uncover a numbered, random card", function() {
       return _.times(25, function() {
         game = new Game;
         game.start();
         expect(game.get('open')).toBeInstanceof(Card);
-        return expect((game.get('open')).get('symbol')).toMatch(/[0-9]/);
+        return expect((game.get('open')).get('symbol')).toMatch(/^[0-9]$/);
       });
     });
     return it("should throw an exception if the move isn't allowed", function() {
       var p;
-      p = game.createPlayer();
+      p = game.createPlayer({
+        name: "P"
+      });
       game.start();
       game.putDown(new Card({
         color: 'black',

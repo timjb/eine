@@ -6,8 +6,10 @@
     it("should receive cards", function() {
       var game, player, spy;
       game = new Game;
-      player = game.createPlayer();
-      player.bind('card', (spy = jasmine.createSpy()));
+      player = game.createPlayer({
+        name: "Player"
+      });
+      player.bind('change:numberOfCards', (spy = jasmine.createSpy()));
       expect(player.countCards()).toBe(startCount);
       player.receive(new Card({
         color: 'black',
@@ -31,10 +33,14 @@
       _results = [];
       for (i = 1; i <= 10; i++) {
         game = new Game;
-        tim = game.createPlayer();
-        nina = game.createPlayer();
-        tim.bind('card', (timSpy = jasmine.createSpy()));
-        nina.bind('card', (ninaSpy = jasmine.createSpy()));
+        tim = game.createPlayer({
+          name: "Tim"
+        });
+        nina = game.createPlayer({
+          name: "Nina"
+        });
+        tim.bind('change:numberOfCards', (timSpy = jasmine.createSpy()));
+        nina.bind('change:numberOfCards', (ninaSpy = jasmine.createSpy()));
         game.start();
         expect(tim.countCards()).toBe(startCount);
         expect(game.currentPlayer()).toBe(tim);
@@ -82,8 +88,12 @@
     it("should know how to play uno", function() {
       var game, i, player1, player2, winner;
       game = new Game;
-      player1 = game.createPlayer();
-      player2 = game.createPlayer();
+      player1 = game.createPlayer({
+        name: "Player1"
+      });
+      player2 = game.createPlayer({
+        name: "Player2"
+      });
       winner = null;
       game.bind('winner', function(w) {
         return winner = w;
@@ -100,8 +110,12 @@
     return it("should take forever for two computer players if they didn't know that they have to say 'eine'", function() {
       var game, i, player1, player2, winner;
       game = new Game;
-      player1 = game.createPlayer();
-      player2 = game.createPlayer();
+      player1 = game.createPlayer({
+        name: "Player1"
+      });
+      player2 = game.createPlayer({
+        name: "Player2"
+      });
       player1.eine = player2.eine = function() {};
       winner = null;
       game.bind('winner', function(w) {

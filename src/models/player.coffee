@@ -1,12 +1,12 @@
 {Hand} = App.Collections
 
 class App.Models.Player extends Backbone.Model
-  initialize: (@game) ->
+  initialize: (attributes, options) ->
     @hand = new Hand
+    @hand.bind 'all', =>
+      @set numberOfCards:@hand.length
 
-  receive: (card) ->
-    @hand.add card
-    @trigger 'card'
+  receive: (card) -> @hand.add card
 
   countCards: -> @hand.length
 
@@ -15,7 +15,6 @@ class App.Models.Player extends Backbone.Model
       card = @hand.getByCid(card) or @hand.get(card)
       throw new Error "Player doesn't have this card" unless card
       @game.putDown card
-      @trigger 'card'
     else
       @game.putDown null
 

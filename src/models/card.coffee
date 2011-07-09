@@ -39,5 +39,11 @@ class App.Models.Card extends Backbone.Model
     @_cachedDeck
 
   @random: ->
-    randomCard = @deck()[Math.floor(Math.random() * @deck().length)]
-    new @ randomCard # Use constructor => new cid
+    rand = (n) -> Math.floor(Math.random() * n)
+    randomElement = (arr) -> arr[rand(arr.length)]
+    new @ randomElement(@deck()) # Use constructor => new cid
+
+  @randomNormal: ->
+    until open and (open.get 'symbol').match /^[0-9]$/
+      open = @random()
+    open

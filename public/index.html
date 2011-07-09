@@ -15,10 +15,11 @@
   <script src="javascripts/backbone-min.js"></script>
   <script src="nowjs/now.js"></script>
   <script src="lib/app.js"></script>
-  <script src="lib/controllers/application.js"></script>
+  <script src="lib/routers/application.js"></script>
   <script src="lib/models/card.js"></script>
   <script src="lib/collections/hand.js"></script>
   <script src="lib/models/player.js"></script>
+  <script src="lib/collections/players.js"></script>
   <script src="lib/models/game.js"></script>
   <script src="lib/views/card.js"></script>
   <script src="lib/views/hand.js"></script>
@@ -32,21 +33,22 @@
     //})
   </script>
   <script>
-    (function () {
-      var game = new App.Models.Game
-      ,   gameView = new App.Views.Game({ model: game })
-      ,   user = game.createPlayer('human')
-      ,   computer1 = game.createPlayer('computer')
-      ,   computer2 = game.createPlayer('computer')
-      ,   computer3 = game.createPlayer('computer')
+    $(document).ready(function () {
+      var game      = new App.Models.Game()
+      ,   user      = game.createPlayer({ name: "Human" })
+      ,   computer1 = game.createPlayer({ name: "Computer1" })
+      ,   computer2 = game.createPlayer({ name: "Computer2" })
+      ,   computer3 = game.createPlayer({ name: "Computer3" })
+      ,   gameView  = new App.Views.Game({ model: game }, user)
+      
       game.bind('next', function (player) {
-        if (player.type === 'computer') {
-          setTimeout(function() { player.playAI() }, 500)
+        if (player !== user) {
+          setTimeout(function () { player.playAI() }, 500)
         }
       })
       game.start()
       $(document.body).append(gameView.render().el)
-    })();
+    })
   </script>
 </body>
 

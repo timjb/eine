@@ -4,8 +4,8 @@
 describe "Player (model)", ->
   it "should receive cards", ->
     game = new Game
-    player = game.createPlayer()
-    player.bind 'card', (spy = jasmine.createSpy())
+    player = game.createPlayer name:"Player"
+    player.bind 'change:numberOfCards', (spy = jasmine.createSpy())
     expect(player.countCards()).toBe startCount
     player.receive(new Card color:'black', symbol:'wish')
     expect(spy).toHaveBeenCalled()
@@ -19,10 +19,10 @@ describe "Player (model)", ->
 
     for i in [1..10]
       game = new Game
-      tim  = game.createPlayer() # me
-      nina = game.createPlayer() # my sister
-      tim.bind  'card', (timSpy  = jasmine.createSpy())
-      nina.bind 'card', (ninaSpy = jasmine.createSpy())
+      tim  = game.createPlayer name:"Tim"  # me
+      nina = game.createPlayer name:"Nina" # my sister
+      tim.bind  'change:numberOfCards', (timSpy  = jasmine.createSpy())
+      nina.bind 'change:numberOfCards', (ninaSpy = jasmine.createSpy())
       game.start()
       
       expect(tim.countCards()).toBe startCount
@@ -49,8 +49,8 @@ describe "Player (model)", ->
 
   it "should know how to play uno", ->
     game    = new Game
-    player1 = game.createPlayer()
-    player2 = game.createPlayer()
+    player1 = game.createPlayer name:"Player1"
+    player2 = game.createPlayer name:"Player2"
     
     winner = null
     game.bind 'winner', (w) -> winner = w
@@ -66,8 +66,8 @@ describe "Player (model)", ->
 
   it "should take forever for two computer players if they didn't know that they have to say 'eine'", ->
     game    = new Game
-    player1 = game.createPlayer()
-    player2 = game.createPlayer()
+    player1 = game.createPlayer name:"Player1"
+    player2 = game.createPlayer name:"Player2"
     
     player1.eine = player2.eine = ->
     

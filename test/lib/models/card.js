@@ -76,7 +76,7 @@
       }
       return _results;
     });
-    return it("gives me a random card", function() {
+    it("gives me a random card", function() {
       var card1, card2, i, isEqual, notEqual;
       notEqual = 0;
       for (i = 1; i <= 100; i++) {
@@ -88,6 +88,14 @@
         }
       }
       return expect(notEqual).toBeGreaterThan(50);
+    });
+    return it("gives me a normal random card", function() {
+      var i, _results;
+      _results = [];
+      for (i = 1; i <= 25; i++) {
+        _results.push(expect(Card.randomNormal().get('symbol')).toMatch(/^[0-9]$/));
+      }
+      return _results;
     });
   });
 }).call(this);

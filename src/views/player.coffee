@@ -1,9 +1,11 @@
+$ = jQuery
+
 {Hand} = App.Views
 
 class App.Views.Player extends Backbone.View
   className: 'player'
 
-  initialize: ->
+  initialize: (options, @isHuman) ->
     _.bindAll this, 'render'
     
     @handView = new Hand collection:@model.hand
@@ -13,12 +15,14 @@ class App.Views.Player extends Backbone.View
       $(@el)[if current is @model then 'addClass' else 'removeClass']('current')
     @model.game.bind 'winner', (winner) =>
       $(@el).addClass 'winner' if winner is @model
-    @model.bind 'card', @render
+    @model.bind 'change:numberOfCards', @render
 
   render: ->
-    el = $(@el).html('')
-    if @model.type is 'human' # local, human player
-      el.append(@handView.render().el)
+    $(@el).html('')
+    
+    if @isHuman # local, human player
+      $(@el).append(@handView.render().el)
     else
-      el.html '<span class="count">' + @model.countCards() + '</span>'
+      $(@el).html '<span class="count">' + @model.countCards() + '</span>'
+    
     this

@@ -1,5 +1,5 @@
 window.App =
-  Controllers: {}
+  Routers: {}
   Models: {}
   Collections: {}
   Views: {}
@@ -8,5 +8,5 @@ window.App =
     einePenalty: 2
 
 $('window').ready ->
-  new App.Controllers.Application
+  new App.Routers.Application
   Backbone.history.start()

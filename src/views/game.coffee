@@ -1,47 +1,44 @@
+$ = jQuery
+
 {Card, Player} = App.Views
 
 class App.Views.Game extends Backbone.View
   className: 'game'
 
-  initialize: ->
+  initialize: (options, @humanPlayer) ->
     _.bindAll this, 'render'
     
     @model.bind 'change:open', @render
-    @model.bind 'add:player', @render
+    @model.players.bind 'all', @render
 
   render: ->
     $(@el).html('')
     
     openCard = $((new Card model:(@model.get 'open')).render().el).addClass('open')
+      .appendTo(@el)
     
     closedCard = $(Card.closedHtml).click =>
       current = @model.currentPlayer()
-      current.playCard null if current.type is 'human'
+      current.playCard null if current is @humanPlayer
+    closedCard.appendTo(@el)
     
-    $(@el)
-      .append(closedCard)
-      .append(openCard)
+    humanPlayerView = new Player model:@humanPlayer, yes
+    $(humanPlayerView.render().el)
+      .addClass('bottom')
+      .appendTo(@el)
     
-    return this if @model.players.length is 0
+    nextPlayers = @model.players.nextPlayers @humanPlayer
     
-    humanPlayerIndex = null
-    for i, player in @model.players
-      if player.type is 'human'
-        humanPlayerIndex = i
-        break
-    
-    players = for i in [humanPlayerIndex..(humanPlayerIndex + @model.players.length - 1)]
-      @model.players[i % @model.players.length]
-    
-    POSITIONS = switch @model.players.length
-      when 1 then ['bottom']
-      when 2 then ['bottom', 'top']
-      when 3 then ['bottom', 'left', 'right']
-      when 4 then ['bottom', 'left', 'top', 'right']
+    positions = switch nextPlayers.length
+      when 1 then ['top']
+      when 2 then ['left', 'right']
+      when 3 then ['left', 'top', 'right']
       else throw new Error "game view can handle at most 4 players"
     
-    _.each players, (player, i) =>
-      playerView = new Player model:player
-      $(@el).append($(playerView.render().el).addClass POSITIONS[i])
+    _.each _.zip(nextPlayers, positions), ([player, position]) =>
+      playerView = new Player model:player, no
+      $(playerView.render().el)
+        .addClass(position)
+        .appendTo(@el)
     
     this

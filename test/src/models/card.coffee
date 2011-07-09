@@ -62,3 +62,7 @@ describe "Card (model)", ->
                 card1.get('symbol') is card2.get('symbol')
       notEqual += 1 unless isEqual
     expect(notEqual).toBeGreaterThan 50
+
+  it "gives me a normal random card", ->
+    for i in [1..25]
+      expect(Card.randomNormal().get 'symbol').toMatch /^[0-9]$/
