@@ -36,9 +36,9 @@
     $(document).ready(function () {
       var game      = new App.Models.Game()
       ,   user      = game.createPlayer({ name: "Human" })
-      ,   computer1 = game.createPlayer({ name: "Computer1" })
-      ,   computer2 = game.createPlayer({ name: "Computer2" })
-      ,   computer3 = game.createPlayer({ name: "Computer3" })
+      ,   computer1 = game.createPlayer({ name: "Deep Blue" })    // chess
+      ,   computer2 = game.createPlayer({ name: "Watson" })       // jeopardy
+      ,   computer3 = game.createPlayer({ name: "Deep Thought" }) // 42
       ,   gameView  = new App.Views.Game({ model: game }, user)
       
       game.bind('next', function (player) {

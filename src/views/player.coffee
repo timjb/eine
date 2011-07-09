@@ -22,13 +22,13 @@ class App.Views.Player extends Backbone.View
     @$('.number-of-cards').text @model.get('numberOfCards')
 
   render: ->
-    $(@el).html('')
-    
     if @isHuman # local, human player
       $(@el).append(@handView.render().el)
     else
-      $('<span class="number-of-cards" />')
-        .text(@model.get('numberOfCards'))
-        .appendTo(@el)
+      $(@el)
+        .html """
+              <span class="name">#{@model.escape 'name'}</span>
+              <span class="number-of-cards">#{@model.escape 'numberOfCards'}</span>
+              """
     
     this
