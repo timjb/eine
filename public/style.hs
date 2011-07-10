@@ -22,14 +22,11 @@ style = renderCSS $ runCSS $ do
 -- Rules
 -- =====
 
-reset = rule "*" $ do
-  margin "0"
-  padding "0"
+reset = rule "*" $ margin "0" >> padding "0"
 
 layout = do
   rule "html, body, .game" $ do
-    width "100%"
-    height "100%"
+    width "100%" >> height "100%"
     overflow "hidden"
   rule "body" $ do
     font "16px Ubuntu, Helvetica, sans-serif"
@@ -42,18 +39,15 @@ colorCard className colorStr = cardRule ("." `append` className) $ do
   borderColor colorStr
   color colorStr
 
--- /* original dimensions * 60% */
--- .player .card { width: 60px; height: 90px; border-width: 6px; font-size: 14px; }
-
 bigCard = do
   width "100px" >> height "150px"
   borderWidth "10px"
-  fontSize "16px"
+  fontSize "67px" >> lineHeight "150px"
 
 smallCard = do
   width "60px" >> height "90px"
   borderWidth "6px"
-  fontSize "14px"
+  fontSize "40px" >> lineHeight "90px"
 
 cards = do
   cardRule "" $ do
@@ -61,11 +55,7 @@ cards = do
     boxShadow "2px 2px 10px #0a2d00"
     background white
     position "relative"
-    rule ".symbol" $ do
-      display "block"
-      position "absolute" >> left "5px" >> right "5px"
-    rule ".symbol:first-child" (top    "5px" >> textAlign "left")
-    rule ".symbol ~ .symbol"   (bottom "5px" >> textAlign "right")
+    textAlign "center"
   
   colorCard "yellow" yellow
   colorCard "green" green
@@ -92,12 +82,13 @@ players = do
     position   "absolute"
     fontSize   "18px" >> lineHeight "30px"
     padding    "0 10px"
-    background "rgba(255,255,255,.1)"
+    background "#375b2d"
+    transition "background 0.3s linear"
     rule ".number-of-cards" $ do
       fontWeight "bold"
       color "#ff9"
       marginLeft "5px"
-  rule ".player.current" $ background "rgba(255,255,255,.5)"
+  rule ".player.current" $ background "#609352"
   rule ".player.winner"  $ background "#fff"
   rule ".player.left, .player.right" $ top "50%"
   rule ".player.left"   $ left "0" >> transform "rotate(90deg) translate(-15px, 70px)" >> margin "0 0 -70px"
