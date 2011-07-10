@@ -35,10 +35,6 @@ layout = do
 
 cardRule = rule . (".card" `append`)
 
-colorCard className colorStr = cardRule ("." `append` className) $ do
-  borderColor colorStr
-  color colorStr
-
 bigCard = do
   width "100px" >> height "150px"
   borderWidth "10px"
@@ -55,25 +51,37 @@ cards = do
     boxShadow "2px 2px 10px #0a2d00"
     background white
     position "relative"
-    textAlign "center"
-  
-  colorCard "yellow" yellow
-  colorCard "green" green
-  colorCard "blue" blue
-  colorCard "red" red
+    rule "span" $ do
+      absolute "0" "0" "0" "0"
+      textAlign "center"
+      pointerEvents "none"
+      zIndex "42"
   cardRule ".closed" $ do
     let grey = "#888"
     borderColor grey
     color grey
     background black
+  
+  let colorCard colorStr = borderColor colorStr >> color colorStr
+  cardRule ".yellow" $ colorCard yellow
+  cardRule ".green"  $ colorCard green
+  cardRule ".blue"   $ colorCard blue
+  cardRule ".red"    $ colorCard red
+  
+  rule ".card.black .color" $ outlineOffset "-5px"
+  rule ".card.black .color:hover"  $ outline "5px solid rgba(0,0,0,0.25)"
+  rule ".card .red"    $ absolute "0%" "50%" "50%" "0%" >> background red
+  rule ".card .green"  $ absolute "0%" "0%" "50%" "50%" >> background green
+  rule ".card .blue"   $ absolute "50%" "50%" "0%" "0%" >> background blue
+  rule ".card .yellow" $ absolute "50%" "0%" "0%" "50%" >> background yellow
 
 game = do
   rule ".open, .closed" $ do
     bigCard
     position "absolute" >> left "50%" >> top "50%"
     marginTop "-85px"
-  rule ".open"   (marginLeft "-130px")
-  rule ".closed" (marginLeft "10px")
+  rule ".open"   $ marginLeft "-130px"
+  rule ".closed" $ marginLeft "10px"
 
 players = do
   rule ".player" $ do
@@ -104,9 +112,9 @@ hand = rule ".hand" $ do
   rule "li:nth-child(2n) .card" (transform "rotate(-4deg)")
   rule "li:nth-child(3n) .card" (transform "rotate(12deg)")
   rule "li .card:hover" (transform "rotate(0) translate(0, -10px)")
-  let hidden = margin "0 -36px" >> transform "translate(0, 150px)"
-  rule "li.fade-out .card" hidden
-  rule "li.fade-in  .card" hidden
+  rules ["li.fade-out .card", "li.fade-in .card"] $ do
+    margin "0 -36px"
+    transform "translate(0, 150px)"
 
 -- http://css3button.net/5232
 eineButton = do
@@ -139,6 +147,8 @@ red    = "#d50b00"
 -- Helpers
 -- =======
 
+absolute t r b l = position "absolute" >> top t >> right r >> bottom b >> left l
+
 vendor name value = do
   prop ("-moz-" `append` name) value
   prop ("-webkit-" `append` name) value
@@ -151,8 +161,10 @@ vendor name value = do
 -- CSS3
 -- ----
 
-borderRadius = vendor "border-radius"
-transform    = vendor "transform"
-transition   = vendor "transition"
-boxShadow    = vendor "box-shadow"
-textShadow   = vendor "text-shadow"
+borderRadius  = vendor "border-radius"
+transform     = vendor "transform"
+transition    = vendor "transition"
+boxShadow     = vendor "box-shadow"
+textShadow    = vendor "text-shadow"
+pointerEvents = prop "pointer-events"
+outlineOffset = prop "outline-offset"

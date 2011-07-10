@@ -20,3 +20,12 @@ describe "Card (view)", ->
     expect(triggered).toBe no
     $(view.el).click()
     expect(triggered).toBe yes
+
+  it "should let the user choose the color of special cards", ->
+    specialCard = new CardM color:'black', symbol:'wish'
+    cardView    = new CardV model:specialCard
+    el = cardView.render().el
+    expect($('.color', el).length).toBe 4
+    green = $('.green', el)
+    green.click()
+    expect(specialCard.get 'color').toBe 'green'
