@@ -19,12 +19,12 @@ class App.Views.Hand extends Backbone.View
     index = @collection.models.indexOf card
     @cardViews.splice(index, 0, cardView)
     cardEl = $('<li />').append(cardView.render().el)
-      .addClass('hidden')
+      .addClass('fade-in')
     if index is 0
       cardEl.prependTo @el
     else
-      cardEl.insertAfter @$('li:not(.hidden)').eq(index - 1)
-    setTimeout (-> cardEl.removeClass('hidden')), 10
+      cardEl.insertAfter @$('li:not(.fade-out)').eq(index - 1)
+    setTimeout (-> cardEl.removeClass('fade-in')), 10
 
   _removeCard: (card) ->
     i = 0
@@ -32,7 +32,7 @@ class App.Views.Hand extends Backbone.View
       if cardView.model is card
         @cardViews.splice(i, 1)
         li = $(cardView.el).parent()
-        li.addClass('hidden')
+        li.addClass('fade-out')
         setTimeout((-> li.remove()), 500)
         break
       i += 1

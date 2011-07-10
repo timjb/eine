@@ -113,7 +113,9 @@ hand = rule ".hand" $ do
   rule "li:nth-child(2n) .card" (transform "rotate(-4deg)")
   rule "li:nth-child(3n) .card" (transform "rotate(12deg)")
   rule "li .card:hover" (transform "rotate(0) translate(0, -10px)")
-  rule "li.hidden .card" (margin "0 -36px" >> transform "translate(0, 150px)")
+  let hidden = margin "0 -36px" >> transform "translate(0, 150px)"
+  rule "li.fade-out .card" hidden
+  rule "li.fade-in  .card" hidden
 
 -- http://css3button.net/5232
 eineButton = do
