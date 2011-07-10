@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Language.CSS hiding (borderRadius, boxShadow, textShadow)
-import Data.Text.Lazy (append)
+import Data.Text.Lazy (Text,append,intercalate,pack)
 import qualified Data.Text.Lazy.IO as LIO
 import System (getArgs)
 
@@ -51,22 +51,20 @@ cards = do
     boxShadow "2px 2px 10px #0a2d00"
     background white
     position "relative"
+    cursor "pointer"
     rule "span" $ do
       absolute "0" "0" "0" "0"
       textAlign "center"
       pointerEvents "none"
       zIndex "42"
-  cardRule ".closed" $ do
-    let grey = "#888"
-    borderColor grey
-    color grey
-    background black
   
   let colorCard colorStr = borderColor colorStr >> color colorStr
   cardRule ".yellow" $ colorCard yellow
   cardRule ".green"  $ colorCard green
   cardRule ".blue"   $ colorCard blue
   cardRule ".red"    $ colorCard red
+  cardRule ".closed" $ colorCard "#888" >> background black
+  cardRule ".closed:hover" $ colorCard "#aaa"
   
   rule ".card.black .color" $ outlineOffset "-5px"
   rule ".card.black .color:hover"  $ outline "5px solid rgba(0,0,0,0.25)"
@@ -74,6 +72,8 @@ cards = do
   rule ".card .green"  $ absolute "0%" "0%" "50%" "50%" >> background green
   rule ".card .blue"   $ absolute "50%" "50%" "0%" "0%" >> background blue
   rule ".card .yellow" $ absolute "50%" "0%" "0%" "50%" >> background yellow
+  
+  rule ".card.open" $ cursor "default"
 
 game = do
   rule ".open, .closed" $ do
@@ -118,17 +118,21 @@ hand = rule ".hand" $ do
 
 -- http://css3button.net/5232
 eineButton = do
+  let purple = "#570071"
+  let lightGrey = "#bbb"
   rule ".eine-button" $ do
     position "absolute" >> top "30px" >> right "30px"
-    color yellow >> fontSize "32px" >> textDecoration "none"
+    color purple >> fontSize "32px" >> textDecoration "none"
     padding "20px"
-    border "3px solid #ffbf00" >> borderRadius "10px"
+    border ("3px solid " `append` purple) >> borderRadius "10px"
     boxShadow "0px 1px 3px rgba(000,000,000,0.5), inset 0px 0px 3px rgba(255,255,255,1)"
     textShadow "0px -1px 0px rgba(000,000,000,0.1), 0px 1px 0px rgba(255,255,255,1)"
-    background "-moz-linear-gradient(top, #ffffff 0%, #ffffff 50%, #bbb)"
-    background "-webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(0.50, #ffffff), to(#bbb))"
+    verticalGradient white [(50,white)] lightGrey
+  rule ".eine-button:hover" $ do
+    verticalGradient lightGrey [(50,white)] white
   rule ".eine-button:active" $ do
-    color white >> background black
+    verticalGradient "#000" [(50,"#333")] "#333"
+    color white
     textShadow "none"
 
 
@@ -168,3 +172,13 @@ boxShadow     = vendor "box-shadow"
 textShadow    = vendor "text-shadow"
 pointerEvents = prop "pointer-events"
 outlineOffset = prop "outline-offset"
+
+verticalGradient :: Text -> [(Int, Text)] -> Text -> CSS (Either Property Rule)
+verticalGradient top stops bottom = do
+  let (++) = append
+  let stopToGecko (percentage, color) = color ++ " " ++ (pack $ show percentage) ++ "%"
+  let stopsToGecko = intercalate "," . map stopToGecko
+  background $ "-moz-linear-gradient(top, " ++ top ++ " 0%, " ++ stopsToGecko stops ++ "," ++ bottom ++ ")"
+  let stopToWebkit (percentage, color) = "color-stop(0." ++ (pack $ show percentage) ++ ", " ++ color ++ ")"
+  let stopsToWebkit = intercalate "," . map stopToWebkit
+  background $ "-webkit-gradient(linear, left top, left bottom, from(" ++ top ++ "), " ++ stopsToWebkit stops ++ ", to(" ++ bottom ++ "))"
