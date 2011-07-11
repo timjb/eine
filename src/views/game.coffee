@@ -10,6 +10,7 @@ class App.Views.Game extends Backbone.View
     
     @model.bind 'change:open', =>
       @_openCard().replaceAll(@$('.open'))
+      @humanPlayerView.highlightMatchingCards(@model.get 'open')
     @model.players.bind('add', @render)
 
   _openCard: ->
@@ -26,8 +27,8 @@ class App.Views.Game extends Backbone.View
     @_openCard().appendTo(@el)
     @_closedCard().appendTo(@el)
     
-    humanPlayerView = new Player model:@humanPlayer, yes
-    $(humanPlayerView.render().el)
+    @humanPlayerView = new Player model:@humanPlayer, yes
+    $(@humanPlayerView.render().el)
       .addClass('bottom')
       .appendTo(@el)
     
@@ -44,5 +45,7 @@ class App.Views.Game extends Backbone.View
       $(playerView.render().el)
         .addClass(position)
         .appendTo(@el)
+    
+    @humanPlayerView.highlightMatchingCards(@model.get 'open')
     
     this

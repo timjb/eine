@@ -14,6 +14,12 @@ class App.Views.Hand extends Backbone.View
       .bind('remove', @_removeCard)
       .bind('reset',  @render)
 
+  highlightMatchingCards: (card) ->
+    for cardView in @cardViews
+      matches = cardView.model.matches card
+      console.log matches
+      $(cardView.el)[if matches then 'addClass' else 'removeClass']('matching')
+
   _addCard: (card) ->
     cardView = @_cardView card
     index = @collection.models.indexOf card

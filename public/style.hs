@@ -115,6 +115,9 @@ hand = rule ".hand" $ do
   rules ["li.fade-out .card", "li.fade-in .card"] $ do
     margin "0 -36px"
     transform "translate(0, 150px)"
+  rule ".card:not(.matching)" $ do
+    transform "translate(0, 50px) !important"
+    cursor "default"
 
 -- http://css3button.net/5232
 eineButton = do
@@ -127,11 +130,11 @@ eineButton = do
     border ("3px solid " `append` purple) >> borderRadius "10px"
     boxShadow "0px 1px 3px rgba(000,000,000,0.5), inset 0px 0px 3px rgba(255,255,255,1)"
     textShadow "0px -1px 0px rgba(000,000,000,0.1), 0px 1px 0px rgba(255,255,255,1)"
-    verticalGradient white [(50,white)] lightGrey
+    verticalGradient white [(0.5,white)] lightGrey
   rule ".eine-button:hover" $ do
-    verticalGradient lightGrey [(50,white)] white
+    verticalGradient lightGrey [(0.5,white)] white
   rule ".eine-button:active" $ do
-    verticalGradient "#000" [(50,"#333")] "#333"
+    verticalGradient "#000" [(0.5,"#333")] "#333"
     color white
     textShadow "none"
 
@@ -173,12 +176,12 @@ textShadow    = vendor "text-shadow"
 pointerEvents = prop "pointer-events"
 outlineOffset = prop "outline-offset"
 
-verticalGradient :: Text -> [(Int, Text)] -> Text -> CSS (Either Property Rule)
+verticalGradient :: Text -> [(Float, Text)] -> Text -> CSS (Either Property Rule)
 verticalGradient top stops bottom = do
   let (++) = append
-  let stopToGecko (percentage, color) = color ++ " " ++ (pack $ show percentage) ++ "%"
+  let stopToGecko (percentage, color) = color ++ " " ++ (pack $ show (percentage*100)) ++ "%"
   let stopsToGecko = intercalate "," . map stopToGecko
   background $ "-moz-linear-gradient(top, " ++ top ++ " 0%, " ++ stopsToGecko stops ++ "," ++ bottom ++ ")"
-  let stopToWebkit (percentage, color) = "color-stop(0." ++ (pack $ show percentage) ++ ", " ++ color ++ ")"
+  let stopToWebkit (percentage, color) = "color-stop(" ++ (pack $ show percentage) ++ ", " ++ color ++ ")"
   let stopsToWebkit = intercalate "," . map stopToWebkit
   background $ "-webkit-gradient(linear, left top, left bottom, from(" ++ top ++ "), " ++ stopsToWebkit stops ++ ", to(" ++ bottom ++ "))"

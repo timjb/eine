@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Eine</title>
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu&v1" />
+  <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu&v1" />-->
   <link rel="stylesheet" href="public/style.hs.css" />
 </head>
 
@@ -46,8 +46,10 @@
           setTimeout(function () { player.playAI() }, 750)
         }
       })
-      game.start()
+      
       $(document.body).append(gameView.render().el)
+      
+      game.start()
     })
   </script>
 </body>
