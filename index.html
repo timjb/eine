@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Eine</title>
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu&v1" />
+  <link rel="stylesheet" href="public/style.hs.css" />
+</head>
+
+<body>
+  <script src="public/javascripts/jquery-min.js"></script>
+  <script src="public/javascripts/underscore-min.js"></script>
+  <script src="public/javascripts/backbone-min.js"></script>
+  <script src="lib/app.js"></script>
+  <script src="lib/routers/application.js"></script>
+  <script src="lib/models/card.js"></script>
+  <script src="lib/collections/hand.js"></script>
+  <script src="lib/models/player.js"></script>
+  <script src="lib/collections/players.js"></script>
+  <script src="lib/models/game.js"></script>
+  <script src="lib/views/card.js"></script>
+  <script src="lib/views/hand.js"></script>
+  <script src="lib/views/player.js"></script>
+  <script src="lib/views/game.js"></script>
+  <script>
+    $(document).ready(function () {
+      var game      = new App.Models.Game()
+      ,   user      = game.createPlayer({ name: "Human" })
+      ,   computer1 = game.createPlayer({ name: "Deep Blue" })    // chess
+      ,   computer2 = game.createPlayer({ name: "Watson" })       // jeopardy
+      ,   computer3 = game.createPlayer({ name: "Deep Thought" }) // 42
+      ,   gameView  = new App.Views.Game({ model: game }, user)
+      
+      game.bind('next', function (player) {
+        if (player !== user) {
+          setTimeout(function () { player.playAI() }, 750)
+        }
+      })
+      
+      $(document.body).append(gameView.render().el)
+      
+      game.start()
+    })
+  </script>
+</body>
+
+</html>
