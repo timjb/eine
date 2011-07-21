@@ -1,3 +1,4 @@
+{Card} = App.Models
 {Hand} = App.Collections
 
 class App.Models.Player extends Backbone.Model
@@ -30,13 +31,23 @@ class App.Models.Player extends Backbone.Model
     open = @game.get 'open'
     hand = @hand
     
+    rand = (n) -> Math.floor(Math.random() * n)
+    randomElem = (arr) -> arr[rand(arr.length)]
+    
     chooseCard = ->
-      for card in hand.models
-        return card if card.matches open
+      possible = hand.filter (card) -> card.matches open
+      return randomElem(possible) if possible.length
       null
     
     chooseColor = (card) ->
-      card.wish 'green' if card?.get 'special'
+      return card unless card?.get 'special'
+      
+      wishColor = 'green'
+      max = 0
+      for color in Card.colors
+        if _.filter(hand.models, (card) -> card.get('color') is color).length > max
+          wishColor = color
+      card.wish wishColor
       card
     
     if chosenCard = chooseColor(chooseCard())
@@ -48,6 +59,7 @@ class App.Models.Player extends Backbone.Model
       else
         @next()
     
-    @eine() if @countCards() is 1
+    # even computers sometimes forget to say eine
+    @eine() if @countCards() is 1 and Math.random() < 0.9
 
   eine: -> @game.eine()

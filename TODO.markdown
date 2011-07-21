@@ -1,4 +1,2 @@
-* Increase graphics performance (use less CSS3?)
-* Play on GitHub Pages against AI
-* Enhance AI
+* Restart
 * Play over the Internet against real opponents
