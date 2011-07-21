@@ -6,7 +6,9 @@ class App.Models.Player extends Backbone.Model
     @hand.bind 'all', =>
       @set numberOfCards:@hand.length
 
-  receive: (card) -> @hand.add card
+  receive: (card) ->
+    @hand.add card
+    @trigger 'receive'
 
   countCards: -> @hand.length
 

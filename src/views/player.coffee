@@ -17,6 +17,9 @@ class App.Views.Player extends Backbone.View
     @model.game.bind 'winner', (winner) =>
       $(@el).addClass 'winner' if winner is @model
     @model.bind 'change:numberOfCards', @_updateNumberOfCards
+    
+    if @isHuman
+      @model.bind 'receive', => @highlightMatchingCards @model.game.get('open')
 
   highlightMatchingCards: (args...) -> @handView.highlightMatchingCards(args...)
 
