@@ -18,8 +18,21 @@ class App.Views.Player extends Backbone.View
       $(@el).addClass 'winner' if winner is @model
     @model.bind 'change:numberOfCards', @_updateNumberOfCards
     
+    @_initDrawOrNextButton()
+    
     if @isHuman
       @model.bind 'receive', => @highlightMatchingCards @model.game.get('open')
+
+  _initDrawOrNextButton: ->
+    @drawOrNextButton = $('<a href="#" class="draw-or-next-button"></a>').click (event) =>
+      event.preventDefault()
+      if @model.get 'didDraw'
+        @model.next()
+      else
+        @model.draw()
+    @model.bind 'current', => @drawOrNextButton.text "Draw a card"
+    @model.bind 'change:didDraw', => @drawOrNextButton.text "Next Player" if @model.get 'didDraw'
+    @model.bind 'not:current', => @drawOrNextButton.text ""
 
   highlightMatchingCards: (args...) -> @handView.highlightMatchingCards(args...)
 
@@ -35,6 +48,7 @@ class App.Views.Player extends Backbone.View
     if @isHuman # local, human player
       $(@el)
         .append(@handView.render().el)
+        .append(@drawOrNextButton)
         .append(@_eineButton())
     else
       $(@el)

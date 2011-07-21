@@ -4,11 +4,12 @@
 class App.Models.Game extends Backbone.Model
   initialize: ->
     @players = new Players
-    @bind 'next', => @_didDraw = no
+    @bind 'next', =>
+      @lastPlayer?.trigger 'not:current'
+      @currentPlayer().trigger 'current'
     @set open:Card.randomNormal()
 
   start: ->
-    @_didDraw  = no
     @_saidEine = no
     @trigger 'next', @currentPlayer()
 
@@ -34,35 +35,36 @@ class App.Models.Game extends Backbone.Model
   putDown: (card) ->
     @_checkIfLastPlayerSaidEine()
     
-    unless card
-      unless @_didDraw
-        @_give @currentPlayer(), 1
-        @_didDraw = yes
-      else
-        @_didDraw = no
-        @players.next()
-        @trigger 'next', @currentPlayer()
-    else
-      # check card
-      throw new Error "invalid move"    unless card.matches(@get 'open')
-      throw new Error "no color chosen" if card.get('color') is Card.specialColor
-      
-      # move card from the players hand to the stack
-      @currentPlayer().hand.remove card
-      @set open:card
-      
-      # do we have a winner?
-      if @currentPlayer().countCards() is 0
-        @trigger 'winner', @currentPlayer()
-        return
-      
-      @lastPlayer = @currentPlayer()
-      
-      @players.reverseDirection() if card.get('symbol') is 'reverse'
-      @players.next()             if card.get('symbol') is 'skip'
-      @players.next()
-      
-      for n in [2,4]
-        @_give @currentPlayer(), n if card.get('symbol') is "+#{n}"
-      
-      @trigger 'next', @currentPlayer()
+    # check card
+    throw new Error "invalid move"    unless card.matches(@get 'open')
+    throw new Error "no color chosen" if card.get('color') is Card.specialColor
+    
+    # move card from the players hand to the stack
+    @currentPlayer().hand.remove card
+    @set open:card
+    
+    # do we have a winner?
+    if @currentPlayer().countCards() is 0
+      @trigger 'winner', @currentPlayer()
+      return
+    
+    @lastPlayer = @currentPlayer()
+    
+    @players.reverseDirection() if card.get('symbol') is 'reverse'
+    @players.next()             if card.get('symbol') is 'skip'
+    @players.next()
+    
+    for n in [2,4]
+      @_give @currentPlayer(), n if card.get('symbol') is "+#{n}"
+    
+    @trigger 'next', @currentPlayer()
+
+  draw: ->
+    @_checkIfLastPlayerSaidEine()
+    @_give @currentPlayer(), 1
+
+  next: ->
+    @_checkIfLastPlayerSaidEine()
+    @lastPlayer = @currentPlayer()
+    @players.next()
+    @trigger 'next', @currentPlayer()

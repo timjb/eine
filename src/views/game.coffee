@@ -19,7 +19,11 @@ class App.Views.Game extends Backbone.View
   _closedCard: ->
     $(Card.closedHtml).click =>
       current = @model.currentPlayer()
-      current.playCard null if current is @humanPlayer
+      if current is @humanPlayer
+        if current.get 'didDraw'
+          current.next()
+        else
+          current.draw()
 
   render: ->
     $(@el).html('')

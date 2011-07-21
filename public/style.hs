@@ -16,6 +16,7 @@ style = renderCSS $ runCSS $ do
   game
   players
   hand
+  drawOrNextButton
   eineButton
 
 
@@ -102,13 +103,17 @@ players = do
   rule ".player.left"   $ left "0" >> transform "rotate(90deg) translate(-15px, 70px)" >> margin "0 0 -70px"
   rule ".player.right"  $ right "0" >> transform "rotate(-90deg) translate(15px,  70px)" >> margin "0 0 -70px"
   rule ".player.top"    $ left "50%" >> top "0" >> marginLeft "-85px"
-  rule ".player.bottom" $ bottom "0" >> left "50px" >> right "50px" >> padding "15px"
+  rule ".player.bottom" $ do
+    bottom "0" >> left "50px" >> right "50px"
+    padding "15px"
+    height "100px" >> lineHeight "100px"
+    textAlign "right"
 
 hand :: CSS Rule
 hand = rule ".hand" $ do
   listStyle "none"
   rule "li" (float "left")
-  rule "li .card" (smallCard >> margin "0" >> transform "rotate(2deg)" >> transition "all 0.3s ease")
+  rule "li .card" (smallCard >> margin "0 2px" >> transform "rotate(2deg)" >> transition "all 0.3s ease")
   rule "li:nth-child(2n) .card" (transform "rotate(-4deg)")
   rule "li:nth-child(3n) .card" (transform "rotate(12deg)")
   rule "li .card:hover" (transform "rotate(0) translate(0, -10px)")
@@ -119,14 +124,23 @@ hand = rule ".hand" $ do
     transform "translate(0, 50px) !important"
     cursor "default"
 
+drawOrNextButton = do
+  rule ".draw-or-next-button" $ do
+    fontSize "18px"
+    margin "0 30px 0 0"
+    color white
+    textDecoration "none"
+  rule ".draw-or-next-button:hover" $ do
+    fontWeight "bold"
+
 -- http://css3button.net/5232
 eineButton = do
   let purple = "#570071"
   let lightGrey = "#bbb"
   rule ".eine-button" $ do
-    position "absolute" >> top "30px" >> right "30px"
+    --position "absolute" >> top "30px" >> right "30px"
     color purple >> fontSize "32px" >> textDecoration "none"
-    padding "20px"
+    padding "20px" >> margin "0 15px"
     border ("3px solid " `append` purple) >> borderRadius "10px"
     boxShadow "0px 1px 3px rgba(000,000,000,0.5), inset 0px 0px 3px rgba(255,255,255,1)"
     textShadow "0px -1px 0px rgba(000,000,000,0.1), 0px 1px 0px rgba(255,255,255,1)"

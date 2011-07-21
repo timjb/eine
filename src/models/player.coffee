@@ -5,6 +5,7 @@ class App.Models.Player extends Backbone.Model
     @hand = new Hand
     @hand.bind 'all', =>
       @set numberOfCards:@hand.length
+    @bind 'current', => @set didDraw:no
 
   receive: (card) ->
     @hand.add card
@@ -13,12 +14,17 @@ class App.Models.Player extends Backbone.Model
   countCards: -> @hand.length
 
   playCard: (card) ->
-    if card
-      card = @hand.getByCid(card) or @hand.get(card)
-      throw new Error "Player doesn't have this card" unless card
-      @game.putDown card
-    else
-      @game.putDown null
+    card = @hand.getByCid(card) or @hand.get(card)
+    throw new Error "Player doesn't have this card" unless card
+    @game.putDown card
+
+  draw: ->
+    @game.draw()
+    @set didDraw:yes
+
+  next: ->
+    throw new Error "You must draw a card before." unless @get('didDraw')
+    @game.next()
 
   playAI: ->
     open = @game.get 'open'
@@ -33,9 +39,15 @@ class App.Models.Player extends Backbone.Model
       card.wish 'green' if card?.get 'special'
       card
     
-    chosenCard = chooseColor(chooseCard())
-    @playCard chosenCard
-    @playCard chooseColor(chooseCard()) unless chosenCard
+    if chosenCard = chooseColor(chooseCard())
+      @playCard chosenCard
+    else
+      @draw()
+      if chosenCard = chooseColor(chooseCard())
+        @playCard chosenCard
+      else
+        @next()
+    
     @eine() if @countCards() is 1
 
   eine: -> @game.eine()
