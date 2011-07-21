@@ -67,6 +67,8 @@ cards = do
   cardRule ".closed" $ colorCard "#888" >> background black
   cardRule ".closed:hover" $ colorCard "#aaa"
   
+  rule ".card.special" $ color white
+  
   rule ".card.black .color" $ outlineOffset "-5px"
   rule ".card.black .color:hover"  $ outline "5px solid rgba(0,0,0,0.25)"
   rule ".card .red"    $ absolute "0%" "50%" "50%" "0%" >> background red
@@ -77,6 +79,10 @@ cards = do
   rule ".card.open" $ cursor "default"
 
 game = do
+  rule ".win-message" $ do
+    position "absolute" >> top "80px" >> left "0" >> right "0"
+    fontSize "64px"
+    textAlign "center"
   rule ".open, .closed" $ do
     bigCard
     position "absolute" >> left "50%" >> top "50%"
@@ -98,7 +104,7 @@ players = do
       color "#ff9"
       marginLeft "5px"
   rule ".player.current" $ background "#609352"
-  rule ".player.winner"  $ background "#fff"
+  rule ".player.winner"  $ background white >> color black
   rule ".player.left, .player.right" $ top "50%"
   rule ".player.left"   $ left "0" >> transform "rotate(90deg) translate(-15px, 70px)" >> margin "0 0 -70px"
   rule ".player.right"  $ right "0" >> transform "rotate(-90deg) translate(15px,  70px)" >> margin "0 0 -70px"

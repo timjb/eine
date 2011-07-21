@@ -19,6 +19,7 @@ class App.Views.Card extends Backbone.View
       .append($('<span />').html(symbol))
     
     if @model.get('special')
+      $(@el).addClass 'special'
       for color in App.Models.Card.colors
         do (color) =>
           colorEl = $('<div class="color" />').addClass(color)

@@ -6,12 +6,14 @@ class App.Views.Game extends Backbone.View
   className: 'game'
 
   initialize: (options, @humanPlayer) ->
-    _.bindAll this, 'render'
+    _.bindAll this, 'render', 'showWinner'
     
     @model.bind 'change:open', =>
       @_openCard().replaceAll(@$('.open'))
       @humanPlayerView.highlightMatchingCards(@model.get 'open')
     @model.players.bind('add', @render)
+    
+    @model.bind 'winner', @showWinner
 
   _openCard: ->
     $((new Card model:(@model.get 'open')).render().el).addClass('open')
@@ -24,6 +26,11 @@ class App.Views.Game extends Backbone.View
           current.next()
         else
           current.draw()
+
+  showWinner: (winner) ->
+    $('<p class="win-message" />')
+      .text("#{winner.get 'name'} has won!")
+      .appendTo(@el)
 
   render: ->
     $(@el).html('')
