@@ -17,7 +17,6 @@ class App.Views.Hand extends Backbone.View
   highlightMatchingCards: (card) ->
     for cardView in @cardViews
       matches = cardView.model.matches card
-      console.log matches
       $(cardView.el)[if matches then 'addClass' else 'removeClass']('matching')
 
   _addCard: (card) ->
