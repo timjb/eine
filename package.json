@@ -4,8 +4,8 @@
 , "keywords":    [ "game" ]
 , "author":      "Tim Baumann <tim@timbaumann.info>"
 , "dependencies":
-  { "express": ">=2.3.11"
-  , "now": ">=0.6.0"
+  { "express": ">=2.4.3"
+  , "now":     ">=0.7.2"
   }
 , "licenses":
   [ { "type": "MIT"
