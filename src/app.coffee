@@ -3,9 +3,10 @@ window.App =
   Models: {}
   Collections: {}
   Views: {}
-  Settings:
-    startCount: 7
-    einePenalty: 2
+  Settings: {}
+
+window.exports = undefined
+window.require = -> undefined
 
 $('window').ready ->
   new App.Routers.Application

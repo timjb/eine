@@ -1,24 +1,29 @@
-{Player} = App.Models
+((exports) ->
 
-class App.Collections.Players extends Backbone.Collection
-  model: Player
+  Backbone = require('backbone') || window.Backbone
+  {Player} = require('../models/player') || App.Models
 
-  initialize: ->
-    @current   = 0
-    @direction = 1 # clockwise
+  class exports.Players extends Backbone.Collection
+    model: Player
 
-  reverseDirection: ->
-    @direction *= -1
+    initialize: ->
+      @current   = 0
+      @direction = 1 # clockwise
 
-  next: ->
-    normalize = (n) => (n + @length) % @length
-    @current = normalize(@current + @direction)
+    reverseDirection: ->
+      @direction *= -1
 
-  currentPlayer: ->
-    @at @current
+    next: ->
+      normalize = (n) => (n + @length) % @length
+      @current = normalize(@current + @direction)
 
-  nextPlayers: (player) ->
-    index = @models.indexOf player
-    throw "No such player." if index is -1
-    for i in [(index + 1)..(index + @length - 1)]
-      @at (i % @length)
+    currentPlayer: ->
+      @at @current
+
+    nextPlayers: (player) ->
+      index = @models.indexOf player
+      throw "No such player." if index is -1
+      for i in [(index + 1)..(index + @length - 1)]
+        @at (i % @length)
+
+)(exports || App.Collections)
