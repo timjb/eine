@@ -20,16 +20,13 @@ class App.Views.Game extends Backbone.View
 
   _closedCard: ->
     $(Card.closedHtml).click =>
-      current = @model.currentPlayer()
+      current = @model.get 'current'
       if current is @humanPlayer
-        if current.get 'didDraw'
-          current.next()
-        else
-          current.draw()
+        current[if current.get 'didDraw' then 'next' else 'draw']()
 
   showWinner: (winner) ->
     $('<p class="win-message" />')
-      .text("#{winner.get 'name'} has won!")
+      .text("#{winner.escape 'name'} has won!")
       .appendTo(@el)
 
   render: ->

@@ -33,9 +33,9 @@
       ,   computer3 = game.createPlayer({ name: "Deep Thought" }) // 42
       ,   gameView  = new App.Views.Game({ model: game }, user)
       
-      game.bind('next', function (player) {
+      game.bind('change:current', function (game, player) {
         if (player !== user) {
-          setTimeout(function () { player.playAI() }, 750)
+          setTimeout(function () { player.playAI() }, 1250)
         }
       })
       

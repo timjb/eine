@@ -103,6 +103,7 @@ players = do
       fontWeight "bold"
       color "#ff9"
       marginLeft "5px"
+  rule ".player.winner .number-of-cards" $ color black
   rule ".player.current" $ background "#609352"
   rule ".player.winner"  $ background white >> color black
   rule ".player.left, .player.right" $ top "50%"
@@ -149,7 +150,6 @@ eineButton = do
     padding "20px" >> margin "0 15px"
     border ("3px solid " `append` purple) >> borderRadius "10px"
     boxShadow "0px 1px 3px rgba(000,000,000,0.5), inset 0px 0px 3px rgba(255,255,255,1)"
-    textShadow "0px -1px 0px rgba(000,000,000,0.1), 0px 1px 0px rgba(255,255,255,1)"
     verticalGradient white [(0.5,white)] lightGrey
   rule ".eine-button:hover" $ do
     verticalGradient lightGrey [(0.5,white)] white
@@ -157,6 +157,11 @@ eineButton = do
     verticalGradient "#000" [(0.5,"#333")] "#333"
     color white
     textShadow "none"
+  rules [".eine-button:active", ".eine-button:focus"] $ outline "none"
+  rule ".eine-button.active" $ do
+    color white
+    borderColor white
+    background purple
 
 
 -- Colors

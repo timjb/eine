@@ -5,28 +5,35 @@
   {Hand}   = require('../collections/hand') || App.Collections
 
   class exports.Player extends Backbone.Model
-    initialize: (attributes, options) ->
+    initialize: ->
       @hand = new Hand
-      @hand.bind 'all', =>
-        @set numberOfCards:@hand.length
-      @bind 'current', => @set didDraw:no
+      
+      @hand.bind 'all', => @set numberOfCards:@hand.length
+      @bind 'change:current', (m, isCurrent) =>
+        @set(didDraw:no, saidEine:no) if isCurrent
 
-    receive: (card) ->
-      @hand.add card
+    receiveCards: (cards) ->
+      @hand.add cards
       @trigger 'receive'
 
     countCards: -> @hand.length
 
+    _checkIfCurrent: ->
+      throw new Error "It's not your turn." unless @get 'current'
+
     playCard: (card) ->
+      @_checkIfCurrent()
       card = @hand.getByCid(card) or @hand.get(card)
       throw new Error "Player doesn't have this card" unless card
       @game.putDown card
 
     draw: ->
+      @_checkIfCurrent()
       @game.draw()
       @set didDraw:yes
 
     next: ->
+      @_checkIfCurrent()
       throw new Error "You must draw a card before." unless @get('didDraw')
       @game.next()
 
@@ -65,6 +72,6 @@
       # even computers sometimes forget to say eine
       @eine() if @countCards() is 1 and Math.random() < 0.9
 
-    eine: -> @game.eine()
+    eine: -> @set saidEine:yes; console.log "eine"
 
 )(exports || App.Models)
