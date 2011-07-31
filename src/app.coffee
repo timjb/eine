@@ -7,7 +7,3 @@ window.App =
 
 window.exports = undefined
 window.require = -> undefined
-
-$('window').ready ->
-  new App.Routers.Application
-  Backbone.history.start()

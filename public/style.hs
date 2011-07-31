@@ -1,5 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- You need to `cabal install css`
+
 import Language.CSS hiding (borderRadius, boxShadow, textShadow)
 import Data.Text.Lazy (Text,append,intercalate,pack)
 import qualified Data.Text.Lazy.IO as LIO
@@ -18,6 +20,8 @@ style = renderCSS $ runCSS $ do
   hand
   drawOrNextButton
   eineButton
+  games
+  message
 
 
 -- Rules
@@ -135,7 +139,7 @@ drawOrNextButton = do
   rule ".draw-or-next-button" $ do
     fontSize "18px"
     margin "0 30px 0 0"
-    color white
+    color "inherit"
     textDecoration "none"
   rule ".draw-or-next-button:hover" $ do
     fontWeight "bold"
@@ -162,6 +166,38 @@ eineButton = do
     color white
     borderColor white
     background purple
+
+games = do
+  rule "#games" $ do
+    background "#042600"
+    width "400px" >> minHeight "400px"
+    margin "64px auto" >> padding "32px"
+    boxShadow "inset 0 0 16px #020"
+    lineHeight "32px"
+  rule "input" $ marginLeft "5px"
+  rule "h1" $ do
+    textAlign "center"
+    fontSize "48px"
+    margin "0 0 26px"
+  rule "p" $ margin "2px"
+  rule "#name" $ do
+    padding "2px"
+  rule "ul#open-games" $ do
+    minHeight "300px"
+    listStyle "none"
+    rule "li" $ do
+      borderTop "1px solid #fff"
+      padding "2px 8px"
+    rule "li:hover" $ do
+      cursor "pointer"
+      background "rgba(255,255,255,0.25)"
+  rule "#new-game" $ do
+    padding "4px"
+
+message = rule ".message" $ do
+  position "absolute" >> bottom "150px" >> left "0" >> right "0"
+  textAlign "center"
+  fontSize "14px"
 
 
 -- Colors

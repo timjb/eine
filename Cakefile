@@ -14,4 +14,4 @@ task 'watch', "Compile CoffeeScript automatically", ->
   connectStd(spawn 'coffee', ['--watch', '--output', 'test/lib', 'test/src'])
 
 task 'serve', "Start the node server", ->
-  connectStd(spawn 'coffee', ['server/index.coffee'])
+  connectStd(spawn 'coffee', ['src/server.coffee'])

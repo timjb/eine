@@ -6,14 +6,14 @@ describe "Player (model)", ->
     game = new Game
     player = game.createPlayer name:"Player"
     player.bind 'change:numberOfCards', (spy = jasmine.createSpy())
-    expect(player.countCards()).toBe startCount
-    player.receive(new Card color:'black', symbol:'wish')
+    expect(player.get 'numberOfCards').toBe startCount
+    player.receiveCards([new Card color:'black', symbol:'wish'])
     expect(spy).toHaveBeenCalled()
-    expect(player.countCards()).toBe startCount + 1
+    expect(player.get 'numberOfCards').toBe startCount + 1
 
   it "should draw cards", ->
     hasCard = (player, card) ->
-      for card2 in player.hand.models
+      for card2 in player.get('hand').models
         return yes if card.get('color')  is card2.get('color') and
                       card.get('symbol') is card2.get('symbol')
 
@@ -25,26 +25,26 @@ describe "Player (model)", ->
       nina.bind 'change:numberOfCards', (ninaSpy = jasmine.createSpy())
       game.start()
       
-      expect(tim.countCards()).toBe startCount
-      expect(game.currentPlayer()).toBe tim
-      tim.playCard null
+      expect(tim.get 'numberOfCards').toBe startCount
+      expect(game.get 'current').toBe tim
+      tim.draw()
       expect(timSpy).toHaveBeenCalled()
-      expect(tim.countCards()).toBe(startCount + 1)
-      expect(game.currentPlayer()).toBe tim
-      tim.playCard null
-      expect(tim.countCards()).toBe(startCount + 1)
-      expect(game.currentPlayer()).toBe nina
+      expect(tim.get 'numberOfCards').toBe(startCount + 1)
+      expect(game.get 'current').toBe tim
+      tim.next()
+      expect(tim.get 'numberOfCards').toBe(startCount + 1)
+      expect(game.get 'current').toBe nina
       for card in Card.deck()
         if not hasCard(nina, card) or not card.matches(game.get 'open')
           expect(-> nina.playCard card).toThrow()
       expect(ninaSpy).not.toHaveBeenCalled()
-      for card in nina.hand.models
+      for card in nina.get('hand').models
         if card.matches(game.get 'open')
           card.wish 'green' if card.get 'special'
           nina.playCard card
           expect(ninaSpy).toHaveBeenCalled()
-          expect(nina.countCards()).toBe(startCount - 1)
-          expect(game.currentPlayer()).toBe tim if card.get('symbol') isnt 'skip'
+          expect(nina.get 'numberOfCards').toBe(startCount - 1)
+          expect(game.get 'current').toBe tim if card.get('symbol') isnt 'skip'
           break
 
   it "should know how to play uno", ->
@@ -58,18 +58,19 @@ describe "Player (model)", ->
     game.start()
     i = 0
     while i < 1000 and not winner
-      game.currentPlayer().playAI()
+      game.get('current').playAI()
       i += 1
     
-    expect(winner.countCards()).toBe 0
+    expect(winner.get 'numberOfCards').toBe 0
     expect(winner is player1 or winner is player2).toBe yes
 
-  it "should take forever for two computer players if they didn't know that they have to say 'eine'", ->
+  it "should take forever for three computer players if they didn't know that they have to say 'eine'", ->
     game    = new Game
     player1 = game.createPlayer name:"Player1"
     player2 = game.createPlayer name:"Player2"
+    player3 = game.createPlayer name:"Player3"
     
-    player1.eine = player2.eine = ->
+    player1.eine = player2.eine = player3.eine = ->
     
     winner = null
     game.bind 'winner', (w) -> winner = w
@@ -77,7 +78,7 @@ describe "Player (model)", ->
     game.start()
     i = 0
     while i < 1000 and not winner
-      game.currentPlayer().playAI()
+      game.get('current').playAI()
       i += 1
     
-    expect(winner is player1 or winner is player2).toBe no
+    expect(winner).toBe null

@@ -1,26 +1,32 @@
 (function() {
-  var $, Card, Game, Hand, PlayerV, _ref;
+  var $, Card, Game, Hand, LocalPlayerView, RemotePlayerView, _ref;
   $ = jQuery;
   _ref = App.Models, Game = _ref.Game, Card = _ref.Card;
   Hand = App.Collections.Hand;
-  PlayerV = App.Views.Player;
+  LocalPlayerView = App.Views.LocalPlayer;
+  RemotePlayerView = App.Views.RemotePlayer;
   describe("Player (view)", function() {
     it("gives the current player the css class 'current' and the winner 'winner'", function() {
-      var game, p1, p1V, p2, p2V, winner;
+      var game, p1, p1V, p2, p2V, winner, wishCard;
       game = new Game;
       p1 = game.createPlayer({
         name: "P1"
       });
-      p1V = new PlayerV({
+      p1V = new RemotePlayerView({
         model: p1
       });
       p2 = game.createPlayer({
         name: "P2"
       });
       p2.eine = function() {};
-      p2V = new PlayerV({
+      p2V = new RemotePlayerView({
         model: p2
       });
+      wishCard = new Card({
+        color: 'black',
+        symbol: 'wish'
+      });
+      p1.receiveCards([wishCard]);
       winner = null;
       game.bind('winner', function(w) {
         return winner = w;
@@ -30,11 +36,11 @@
       game.start();
       expect($(p1V.el).hasClass('current')).toBe(true);
       expect($(p2V.el).hasClass('current')).toBe(false);
-      p1.playAI();
+      p1.playCard(wishCard.wish('blue'));
       expect($(p1V.el).hasClass('current')).toBe(false);
       expect($(p2V.el).hasClass('current')).toBe(true);
       while (!winner) {
-        game.currentPlayer().playAI();
+        game.get('current').playAI();
       }
       expect($(p1V.el).hasClass('winner')).toBe(true);
       return expect($(p2V.el).hasClass('winner')).toBe(false);
@@ -48,12 +54,12 @@
       cp1 = game.createPlayer({
         name: "Computer"
       });
-      meView = new PlayerV({
+      meView = new LocalPlayerView({
         model: me
-      }, true);
-      cp1View = new PlayerV({
+      });
+      cp1View = new RemotePlayerView({
         model: cp1
-      }, false);
+      });
       meView.render();
       cp1View.render();
       game.start();
@@ -61,8 +67,8 @@
       expect($('.number-of-cards', meView.el).length).toBe(0);
       expect($('.name', cp1View.el).text()).toBe("Computer");
       return _.times(5, function() {
-        game.currentPlayer().playAI();
-        return expect(+$('.number-of-cards', cp1View.el).text()).toBe(cp1.countCards());
+        game.get('current').playAI();
+        return expect(+$('.number-of-cards', cp1View.el).text()).toBe(cp1.get('numberOfCards'));
       });
     });
     it("should say eine if the user clicks the 'Eine!' button", function() {
@@ -74,13 +80,13 @@
       loser = game.createPlayer({
         name: "You"
       });
-      view = new PlayerV({
+      view = new LocalPlayerView({
         model: winner
-      }, true);
+      });
       game.start();
-      expect(game._saidEine).toBe(false);
+      expect(winner.get('saidEine')).toBe(false);
       $('.eine-button', view.render().el).click();
-      return expect(game._saidEine).toBe(true);
+      return expect(winner.get('saidEine')).toBe(true);
     });
     it("shows the player's hand if the player's human", function() {
       var aiPlayer, game, humanPlayer;
@@ -91,12 +97,12 @@
       humanPlayer = game.createPlayer({
         name: "Human"
       });
-      expect($('.card', new PlayerV({
+      expect($('.card', new RemotePlayerView({
         model: aiPlayer
-      }, false).render().el).length).toBe(0);
-      return expect($('.card', new PlayerV({
+      }).render().el).length).toBe(0);
+      return expect($('.card', new LocalPlayerView({
         model: humanPlayer
-      }, true).render().el).length).not.toBe(0);
+      }).render().el).length).not.toBe(0);
     });
     return it("plays a card when the user clicks on it", function() {
       var aiPlayer, g5, g6, g7, g8, g9, game, humanPlayer, view;
@@ -104,8 +110,10 @@
       humanPlayer = game.createPlayer({
         name: "human"
       });
-      humanPlayer.hand = new Hand;
-      humanPlayer.hand.add([
+      humanPlayer.set({
+        hand: new Hand
+      });
+      humanPlayer.get('hand').add([
         g5 = new Card({
           color: 'green',
           symbol: '5'
@@ -133,11 +141,11 @@
           symbol: '0'
         })
       });
-      view = new PlayerV({
+      view = new LocalPlayerView({
         model: humanPlayer
-      }, true);
+      });
       $('.card', view.render().el).eq(1).click();
-      expect(humanPlayer.hand.length).toBe(4);
+      expect(humanPlayer.get('hand').length).toBe(4);
       return expect(game.get('open')).toBe(g6);
     });
   });

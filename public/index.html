@@ -9,48 +9,52 @@
 </head>
 
 <body>
-  <script src="nowjs/now.js"></script>
+  <div id="games">
+    <h1>Eine!</h1>
+    <noscript>Please enable JavaScript in your browser.</noscript>
+    <p>
+      <label>
+        Nickname:
+        <input id="name" type="text" value="" placeholder="foobar55" autofocus="autofocus" />
+      </label>
+    </p>
+    <p>Join one of these games &hellip;</p>
+    <ul id="open-games"></ul>
+    <p>
+      &hellip; or <input id="new-game" type="button" value="start a new one" />
+    </p>
+  </div>
+  <script>
+    // shim
+    if (!window.console) {
+      window.console = {
+        log: function () {},
+        error: function () {}
+      };
+    }
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>window.socket = io.connect('http://localhost');</script>
   <script src="javascripts/jquery-min.js"></script>
   <script src="javascripts/underscore-min.js"></script>
   <script src="javascripts/backbone-min.js"></script>
   <script src="lib/app.js"></script>
   <script src="lib/settings.js"></script>
-  <script src="lib/routers/application.js"></script>
   <script src="lib/models/card.js"></script>
   <script src="lib/collections/hand.js"></script>
   <script src="lib/models/player.js"></script>
+  <script src="lib/models/client_local_player.js"></script>
+  <script src="lib/models/client_remote_player.js"></script>
   <script src="lib/collections/players.js"></script>
   <script src="lib/models/game.js"></script>
+  <script src="lib/models/client_game.js"></script>
   <script src="lib/views/card.js"></script>
   <script src="lib/views/hand.js"></script>
   <script src="lib/views/player.js"></script>
+  <script src="lib/views/local_player.js"></script>
+  <script src="lib/views/remote_player.js"></script>
   <script src="lib/views/game.js"></script>
-  <script>
-    now.ready(function() {
-      //now.example(function(answer) {
-      //  alert(answer)
-      //})
-    })
-    
-    //$(document).ready(function () {
-    //  var game      = new App.Models.Game()
-    //  ,   user      = game.createPlayer({ name: "Human" })
-    //  ,   computer1 = game.createPlayer({ name: "Deep Blue" })    // chess
-    //  ,   computer2 = game.createPlayer({ name: "Watson" })       // jeopardy
-    //  ,   computer3 = game.createPlayer({ name: "Deep Thought" }) // 42
-    //  ,   gameView  = new App.Views.Game({ model: game }, user)
-    //  
-    //  game.bind('next', function (player) {
-    //    if (player !== user) {
-    //      setTimeout(function () { player.playAI() }, 750)
-    //    }
-    //  })
-    //  
-    //  $(document.body).append(gameView.render().el)
-    //  
-    //  game.start()
-    //})
-  </script>
+  <script src="lib/client.js"></script>
 </body>
 
 </html>

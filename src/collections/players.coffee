@@ -22,8 +22,11 @@
 
     nextPlayers: (player) ->
       index = @models.indexOf player
-      throw "No such player." if index is -1
-      for i in [(index + 1)..(index + @length - 1)]
-        @at (i % @length)
+      throw new Error "No such player." unless index >= 0
+      if @length is 1
+        []
+      else
+        for i in [(index + 1)..(index + @length - 1)]
+          @at (i % @length)
 
 )(exports || App.Collections)

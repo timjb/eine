@@ -36,10 +36,10 @@
       game.start();
       closedCard = $('.card.closed', view.render().el);
       closedCard.click();
-      expect(p1.countCards()).toBe(App.Settings.startCount + 1);
-      expect(game.currentPlayer()).toBe(p1);
+      expect(p1.get('numberOfCards')).toBe(App.Settings.startCount + 1);
+      expect(game.get('current')).toBe(p1);
       closedCard.click();
-      return expect(game.currentPlayer()).toBe(p2);
+      return expect(game.get('current')).toBe(p2);
     });
     return describe("it displays the players", function() {
       var el, game, human, view;

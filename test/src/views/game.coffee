@@ -22,10 +22,10 @@ describe "Game (view)", ->
     game.start()
     closedCard = $('.card.closed', view.render().el)
     closedCard.click()
-    expect(p1.countCards()).toBe(App.Settings.startCount + 1)
-    expect(game.currentPlayer()).toBe(p1)
+    expect(p1.get 'numberOfCards').toBe(App.Settings.startCount + 1)
+    expect(game.get 'current').toBe(p1)
     closedCard.click()
-    expect(game.currentPlayer()).toBe(p2)
+    expect(game.get 'current').toBe(p2)
 
   describe "it displays the players", ->
     game = view = el = human = null
