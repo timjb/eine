@@ -102,13 +102,14 @@ io.sockets.on 'connection', (socket) ->
     sendGame game
     join game, name
     broadcastGames()
-  
-  socket.on 'disconnect', -> handleErrors ->
-    # TODO
 
 
 # Go!
 # ===
+
+# Make sure that the process doesn't shut down if an error occurs.
+process.on 'uncaughtException', (error) ->
+  console.log error
 
 app.listen(8000)
 console.log "Server is running on port 8000."
