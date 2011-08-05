@@ -10,9 +10,9 @@ socketIO = require 'socket.io'
 _        = require 'underscore'
 
 # Project
-{Card}       = require '../src/models/card'
-{Player}     = require '../src/models/player'
-{ServerGame} = require '../src/models/server_game'
+{Card}       = require './models/card'
+{Player}     = require './models/player'
+{ServerGame} = require './models/server_game'
 
 
 # Express
@@ -24,10 +24,6 @@ app = express.createServer()
 
 app.configure ->
   app.use express.static "#{mainDir}/public"
-  app.use express.compiler
-    src:    "#{mainDir}/lib"
-    dest:   "#{mainDir}/src"
-    enable: ['coffeescript']
   app.use express.static "#{mainDir}/lib"
   app.use express.static mainDir
 
